@@ -7,8 +7,8 @@ import java.util.HashSet
 /**
  * ClassExpression implements methods for constructing class expressions,
  * including singleton expressions encapsulating a single class, complements, intersections,
- * and unions. While the library does not perform any mathematical reasoning, it makes
- * use of certain theorems to simplify expressions where possible:
+ * and unions. While the library does not perform any mathematical reasoning, it employs
+ * these theorems to simplify expressions:
  * 
  * Theorem 1: Set complement is idempotent. For any class A, (A′)′ = A.
  * 
@@ -55,7 +55,7 @@ import java.util.HashSet
 		this.equals(e) ?
 			// Theorem 2
 			this :
-				e.class.equals(Intersection) ?
+				(e instanceof Intersection) ?
 					// Theorem 3
 					e.intersection(this) : 
 						new Intersection(new HashSet<ClassExpression>(#[this, e]))
@@ -70,18 +70,10 @@ import java.util.HashSet
 		this.equals(e) ?
 			// Theorem 5
 			this :
-				e.class.equals(Union) ?
+				(e instanceof Union) ?
 					// Theorem 6
 					e.union(this) :
 						new Union(new HashSet<ClassExpression>(#[this, e]))		
-	}
-	
-	/*
-	 * @param		o An arbitrary object
-	 * @return		boolean true if and only if o denotes the same ClassExpression
-	 */
-	override boolean equals(Object o) {
-		hashCode.equals(o.hashCode)
 	}
 	
 	/*
@@ -112,17 +104,26 @@ class Singleton extends ClassExpression {
 	}
 	
 	/*
+	 * @param		o An arbitrary object
+	 * @return		boolean true if and only if o denotes the same Singleton
+	 */
+	override boolean equals(Object o) {
+		(o instanceof Singleton) &&
+			(o as Singleton).encapsulatedClass.equals(encapsulatedClass)
+	}
+	
+	/*
 	 * @return		int hash code of the Singleton
 	 */
 	override int hashCode() {
-		#[Singleton, encapsulatedClass].hashCode
+		encapsulatedClass.hashCode
 	}
 	
 	/*
 	 * @return		String a string representation of the encapsulated class
 	 */
 	override String toString() {
-		encapsulatedClass.toString
+		#[Singleton, encapsulatedClass].toString
 	}
 	
 	/*
@@ -154,13 +155,6 @@ abstract class Unary extends ClassExpression {
 		this.e = e
 	}
 	
-	/*
-	 * @return		int hash code of the Unary
-	 */
-	override int hashCode() {
-		#[this.class, e].hashCode
-	}
-	
 }
 
 /*
@@ -178,6 +172,22 @@ class Complement extends Unary {
 	 */
 	new(ClassExpression e) {
 		super(e)
+	}
+	
+	/*
+	 * @param		o An arbitrary object
+	 * @return		boolean true if and only if o denotes the same Complement
+	 */
+	override boolean equals(Object o) {
+		(o instanceof Complement) &&
+			(o as Complement).e.equals(e)
+	}
+	
+	/*
+	 * @return		int hash code of the Complement
+	 */
+	override int hashCode() {
+		#[Complement, e].hashCode
 	}
 	
 	/*
@@ -228,13 +238,6 @@ abstract class Binary extends ClassExpression {
 	}
 	
 	/*
-	 * @return		int hash code of the Binary
-	 */
-	override int hashCode() {
-		#[this.class, a, b].hashCode
-	}
-	
-	/*
 	 * @param		op String denoting binary operator
 	 * @return		String denoting this Binary
 	 */
@@ -256,6 +259,23 @@ class Difference extends Binary {
 	 */
 	new(ClassExpression minuend, ClassExpression subtrahend) {
 		super(minuend, subtrahend)
+	}
+	
+	/*
+	 * @param		o An arbitrary object
+	 * @return		boolean true if and only if o denotes the same Difference
+	 */
+	override boolean equals(Object o) {
+		(o instanceof Difference) &&
+			(o as Difference).a.equals(a) &&
+			(o as Difference).b.equals(b)
+	}
+	
+	/*
+	 * @return		int hash code of the Difference
+	 */
+	override int hashCode() {
+		#[Difference, a, b].hashCode
 	}
 	
 	/*
@@ -294,13 +314,6 @@ abstract class Nary extends ClassExpression {
 	}
 	
 	/*
-	 * @return		int hash code of the Nary
-	 */
-	override int hashCode() {
-		#[this.class, s].hashCode
-	}
-	
-	/*
 	 * @param		c String denoting the operation
 	 * @return		String denoting this Nary
 	 */
@@ -325,6 +338,22 @@ class Intersection extends Nary {
 	}
 	
 	/*
+	 * @param		o An arbitrary object
+	 * @return		boolean true if and only if o denotes the same Intersection
+	 */
+	override boolean equals(Object o) {
+		(o instanceof Intersection) &&
+			(o as Intersection).s.equals(s)
+	}
+	
+	/*
+	 * @return		int hash code of the Intersection
+	 */
+	override int hashCode() {
+		#[Intersection, s].hashCode
+	}
+	
+	/*
 	 * @return		String denoting this Intersection
 	 */
 	override String toString() {
@@ -338,7 +367,7 @@ class Intersection extends Nary {
 	override intersection(ClassExpression e) {		
 		val newSet = new HashSet(s)		
 		// Theorem 4
-		if (e.class == Intersection)
+		if (e instanceof Intersection)
 			newSet.addAll((e as Intersection).s)
 		else
 			newSet.add(e)						
@@ -361,6 +390,22 @@ class Union extends Nary {
 	}
 	
 	/*
+	 * @param		o An arbitrary object
+	 * @return		boolean true if and only if o denotes the same Union
+	 */
+	override boolean equals(Object o) {
+		(o instanceof Union) &&
+			(o as Union).s.equals(s)
+	}
+	
+	/*
+	 * @return		int hash code of the Union
+	 */
+	override int hashCode() {
+		#[Union, s].hashCode
+	}
+	
+	/*
 	 * @return		String denoting this Union
 	 */
 	override String toString() {
@@ -374,7 +419,7 @@ class Union extends Nary {
 	override intersection(ClassExpression e) {
 		val newSet = new HashSet(s)
 		// Theorem 6
-		if (e.class == Union)
+		if (e instanceof Union)
 			newSet.addAll((e as Union).s)
 		else
 			newSet.add(e)			
