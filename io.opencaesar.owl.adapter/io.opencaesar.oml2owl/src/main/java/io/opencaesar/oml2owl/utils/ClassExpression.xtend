@@ -123,7 +123,7 @@ class Singleton extends ClassExpression {
 	 * @return		String a string representation of the encapsulated class
 	 */
 	override String toString() {
-		#[Singleton, encapsulatedClass].toString
+		encapsulatedClass.toString
 	}
 	
 	/*
