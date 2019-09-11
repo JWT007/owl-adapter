@@ -8,8 +8,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import io.opencaesar.oml2owl.utils.Singleton;
 import io.opencaesar.oml2owl.utils.Complement;
+import io.opencaesar.oml2owl.utils.Difference;
+import io.opencaesar.oml2owl.utils.Intersection;
+import io.opencaesar.oml2owl.utils.Union;
 
 public class TestSingleton {
 
@@ -83,12 +89,19 @@ public class TestSingleton {
 
 	@Test
 	public void testDifference() {
-		fail("Not yet implemented");
+		Difference amb = new Difference(sa1, sb);
+		Difference bma = new Difference(sb, sa1);
+		assertEquals(amb, sa1.difference(sb));
+		assertEquals(bma, sb.difference(sa1));
 	}
 
 	@Test
 	public void testIntersection() {
-		fail("Not yet implemented");
+		Singleton sl[] = {sa1, sb};
+		HashSet<Singleton> s = new HashSet<Singleton>(Arrays.asList(sl));
+		Intersection i = new Intersection(s);
+		assertEquals(i, sa1.intersection(sb));
+		assertEquals(i, sb.intersection(sa1));
 	}
 
 	@Test

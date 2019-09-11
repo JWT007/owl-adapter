@@ -27,6 +27,7 @@ import java.util.HashSet
  * 				(A &cup; B) &cup; C = A &cup; (B &cup; C).</li>
  * 
  * <li>Theorem 8: For any sets A, B, and C, (A\B)\C = A\(B &cup; C).</li>
+ * </ul>
  * 
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
@@ -220,7 +221,7 @@ class Complement extends Unary {
 /**
  * Binary implements methods for ClassExpressions denoting a operation on two
  * 		ClassExpressions.
-
+ *
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
  * @since		0.0.1
@@ -251,8 +252,12 @@ abstract class Binary extends ClassExpression {
 		
 }
 
-/*
+/**
  * Difference implements methods for ClassExpressions denoting set differences.
+ *
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
+ * @version		0.0.1
+ * @since		0.0.1
  */
 class Difference extends Binary {
 	
@@ -305,6 +310,10 @@ class Difference extends Binary {
 /**
  * Nary implements methods for ClassExpressions that denote an operation on a set of
  * ClassExpressions.
+ *
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
+ * @version		0.0.1
+ * @since		0.0.1
  */
 abstract class Nary extends ClassExpression {
 	
@@ -329,9 +338,13 @@ abstract class Nary extends ClassExpression {
 	
 }
 
-/*
+/**
  * Intersection implements methods for ClassExpressions that denote the intersection of a set of
  * ClassExpressions.
+ *
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
+ * @version		0.0.1
+ * @since		0.0.1
  */
 class Intersection extends Nary {
 	
@@ -384,6 +397,10 @@ class Intersection extends Nary {
 /**
  * Union implements methods for ClassExpressions that denote the union of a set of
  * ClassExpressions.
+ *
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
+ * @version		0.0.1
+ * @since		0.0.1
  */
 class Union extends Nary {
 	
