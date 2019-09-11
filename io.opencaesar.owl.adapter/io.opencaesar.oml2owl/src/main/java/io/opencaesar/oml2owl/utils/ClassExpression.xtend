@@ -28,25 +28,25 @@ import java.util.HashSet
  * 
  * Theorem 8: For any sets A, B, and C, (A\B)\C = A\(B∪C).
  * 
- * @author		Steven Jenkins <j.s.jenkins@jpl.nasa.gov>
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
  * @since		0.0.1
  */
  abstract class ClassExpression {
 
-	/*
+	/**
 	 * @return		ClassExpression The complement of this ClassExpression
 	 */
 	def ClassExpression complement() { new Complement(this) }
 	
-	/*
+	/**
 	 * @param		e ClassExpression 
 	 * @return		ClassExpression The difference of this ClassExpression and another
 	 * 				specified ClassExpression
 	 */
 	def ClassExpression difference(ClassExpression e) { new Difference(this, e) }
 	
-	/*
+	/**
 	 * @param		e ClassExpression 
 	 * @return		ClassExpression The intersection of this ClassExpression and another
 	 * 				specified ClassExpression
@@ -61,7 +61,7 @@ import java.util.HashSet
 						new Intersection(new HashSet<ClassExpression>(#[this, e]))
 	}
 	
-	/*
+	/**
 	 * @param		e ClassExpression 
 	 * @return		ClassExpression The union of this ClassExpression and another
 	 * 				specified ClassExpression
@@ -76,18 +76,18 @@ import java.util.HashSet
 						new Union(new HashSet<ClassExpression>(#[this, e]))		
 	}
 	
-	/*
+	/**
 	 * @return		String A string representation of this ClassExpression as an atom
 	 */
 	def String toAtom() { "(" + toString + ")"}
 	
 }
 
-/*
+/**
  * Singleton implements methods for ClassExpressions that encapsulate an arbitrary
  * object representing a single class.
 
- * @author		Steven Jenkins <j.s.jenkins@jpl.nasa.gov>
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
  * @since		0.0.1
  */
@@ -95,15 +95,16 @@ class Singleton extends ClassExpression {
 	
 	protected val Object encapsulatedClass
 	
-	/*
+	/**
+	 * A Singleton encapsulating the specified class
+	 *
 	 * @param		encapsulatedClass An arbitrary object representing a class
-	 * @return		Singleton A Singleton encapsulating the specified class
 	 */
 	new(Object encapsulatedClass) {
 		this.encapsulatedClass = encapsulatedClass
 	}
 	
-	/*
+	/**
 	 * @param		o An arbitrary object
 	 * @return		boolean true if and only if o denotes the same Singleton
 	 */
@@ -112,21 +113,21 @@ class Singleton extends ClassExpression {
 			(o as Singleton).encapsulatedClass.equals(encapsulatedClass)
 	}
 	
-	/*
+	/**
 	 * @return		int hash code of the Singleton
 	 */
 	override int hashCode() {
 		encapsulatedClass.hashCode
 	}
 	
-	/*
+	/**
 	 * @return		String a string representation of the encapsulated class
 	 */
 	override String toString() {
 		encapsulatedClass.toString
 	}
 	
-	/*
+	/**
 	 * @return		String a string representation of the encapsulated class as an atom
 	 */
 	override String toAtom() {
@@ -135,11 +136,11 @@ class Singleton extends ClassExpression {
 	
 }
 
-/*
+/**
  * Unary implements methods for ClassExpressions denoting an operation on
  * a single ClassExpression.
 
- * @author		Steven Jenkins <j.s.jenkins@jpl.nasa.gov>
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
  * @since		0.0.1
  */
@@ -147,9 +148,10 @@ abstract class Unary extends ClassExpression {
 	
 	protected ClassExpression e
 	
-	/*
+	/**
+	 * A Unary involving e
+	 * 
 	 * @param		e a ClassExpression
-	 * @return		Unary involving e
 	 */
 	new(ClassExpression e) {
 		this.e = e
@@ -157,24 +159,25 @@ abstract class Unary extends ClassExpression {
 	
 }
 
-/*
+/**
  * Complement implements methods for ClassExpressions denoting complements.
 
- * @author		Steven Jenkins <j.s.jenkins@jpl.nasa.gov>
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
  * @since		0.0.1
  */
 class Complement extends Unary {	
 	
-	/*
+	/**
+	 * The complement of e
+	 * 
 	 * @param		e a Class Expression
-	 * @return		ClassExpression the complement of e
 	 */
 	new(ClassExpression e) {
 		super(e)
 	}
 	
-	/*
+	/**
 	 * @param		o An arbitrary object
 	 * @return		boolean true if and only if o denotes the same Complement
 	 */
@@ -183,28 +186,28 @@ class Complement extends Unary {
 			(o as Complement).e.equals(e)
 	}
 	
-	/*
+	/**
 	 * @return		int hash code of the Complement
 	 */
 	override int hashCode() {
 		#[Complement, e].hashCode
 	}
 	
-	/*
+	/**
 	 * @return		String string denoting this Complement
 	 */
 	override String toString() {
 		e.toAtom + "′"
 	}
 	
-	/*
+	/**
 	 * @return		String string denoting this Complement as an atom
 	 */
 	override String toAtom() {
 		toString
 	}
 	
-	/*
+	/**
 	 * @return		ClassExpression the complement of this Complement (simplified)
 	 */
 	override ClassExpression complement() {
@@ -214,11 +217,11 @@ class Complement extends Unary {
 	
 }
 
-/*
+/**
  * Binary implements methods for ClassExpressions denoting a operation on two
  * 		ClassExpressions.
 
- * @author		Steven Jenkins <j.s.jenkins@jpl.nasa.gov>
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
  * @since		0.0.1
  */
@@ -227,17 +230,18 @@ abstract class Binary extends ClassExpression {
 	protected ClassExpression a
 	protected ClassExpression b
 	
-	/*
+	/**
+	 * A Binary involving a and b
+	 * 
 	 * @param		a a ClassExpression
 	 * @param		b a ClassExpression
-	 * @return		Binary involving a and b
 	 */
 	new(ClassExpression a, ClassExpression b) {
 		this.a = a
 		this.b = b
 	}
 	
-	/*
+	/**
 	 * @param		op String denoting binary operator
 	 * @return		String denoting this Binary
 	 */
@@ -252,16 +256,17 @@ abstract class Binary extends ClassExpression {
  */
 class Difference extends Binary {
 	
-	/*
+	/**
+	 * Difference denoting minuend minus subtrahend
+	 * 
 	 * @param		minuend a ClassExpression
 	 * @param		subtrahend a ClassExpression
-	 * @return		Difference denoting minuend minus subtrahend
 	 */
 	new(ClassExpression minuend, ClassExpression subtrahend) {
 		super(minuend, subtrahend)
 	}
 	
-	/*
+	/**
 	 * @param		o An arbitrary object
 	 * @return		boolean true if and only if o denotes the same Difference
 	 */
@@ -271,21 +276,21 @@ class Difference extends Binary {
 			(o as Difference).b.equals(b)
 	}
 	
-	/*
+	/**
 	 * @return		int hash code of the Difference
 	 */
 	override int hashCode() {
 		#[Difference, a, b].hashCode
 	}
 	
-	/*
+	/**
 	 * @return		String denoting this Difference
 	 */
 	override toString() {
 		toString("\\")
 	}
 	
-	/*
+	/**
 	 * @param		e ClassExpression 
 	 * @return		ClassExpression The difference of this ClassExpression and another
 	 * 				specified ClassExpression (simplified)
@@ -297,7 +302,7 @@ class Difference extends Binary {
 	
 }
 
-/*
+/**
  * Nary implements methods for ClassExpressions that denote an operation on a set of
  * ClassExpressions.
  */
@@ -305,15 +310,16 @@ abstract class Nary extends ClassExpression {
 	
 	protected Set<ClassExpression> s
 	
-	/*
-	 * @param		s Set<ClassExpression>
-	 * @return		Nary involving s
+	/**
+	 * Nary involving s
+	 * 
+	 * @param		s Set&lt;ClassExpression&gt;
 	 */
 	new(Set<ClassExpression> s) {
 		this.s = s
 	}
 	
-	/*
+	/**
 	 * @param		c String denoting the operation
 	 * @return		String denoting this Nary
 	 */
@@ -329,15 +335,15 @@ abstract class Nary extends ClassExpression {
  */
 class Intersection extends Nary {
 	
-	/*
-	 * @param		s Set<ClassExpression>
-	 * @return		Intersection of s 
+	/**
+	 * Intersection of s
+	 * @param		s Set&lt;ClassExpression&gt;
 	 */
 	new(Set<ClassExpression> s) {
 		super(s)
 	}
 	
-	/*
+	/**
 	 * @param		o An arbitrary object
 	 * @return		boolean true if and only if o denotes the same Intersection
 	 */
@@ -346,21 +352,21 @@ class Intersection extends Nary {
 			(o as Intersection).s.equals(s)
 	}
 	
-	/*
+	/**
 	 * @return		int hash code of the Intersection
 	 */
 	override int hashCode() {
 		#[Intersection, s].hashCode
 	}
 	
-	/*
+	/**
 	 * @return		String denoting this Intersection
 	 */
 	override String toString() {
 		toString("∩")
 	}
 	
-	/*
+	/**
 	 * @param		e ClassExpression
 	 * @return		Intersection denoting intersection of this Intersection with e (simplified)
 	 */
@@ -375,21 +381,22 @@ class Intersection extends Nary {
 	}
 }
 
-/*
+/**
  * Union implements methods for ClassExpressions that denote the union of a set of
  * ClassExpressions.
  */
 class Union extends Nary {
 	
-	/*
-	 * @param		s Set<ClassExpression>
-	 * @return		Union of s 
+	/**
+	 * Union of s
+	 * 
+	 * @param		s Set&lt;ClassExpression&gt;
 	 */
 	new(Set<ClassExpression> s) {
 		super(s)
 	}
 	
-	/*
+	/**
 	 * @param		o An arbitrary object
 	 * @return		boolean true if and only if o denotes the same Union
 	 */
@@ -398,21 +405,21 @@ class Union extends Nary {
 			(o as Union).s.equals(s)
 	}
 	
-	/*
+	/**
 	 * @return		int hash code of the Union
 	 */
 	override int hashCode() {
 		#[Union, s].hashCode
 	}
 	
-	/*
+	/**
 	 * @return		String denoting this Union
 	 */
 	override String toString() {
 		toString("∪")
 	}
 	
-	/*
+	/**
 	 * @param		e ClassExpression
 	 * @return		Union denoting union of this Union with e (simplified)
 	 */
