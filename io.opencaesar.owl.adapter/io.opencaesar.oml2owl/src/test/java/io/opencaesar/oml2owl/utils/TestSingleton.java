@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import io.opencaesar.oml2owl.utils.Singleton;
+import io.opencaesar.oml2owl.utils.ClassExpression;
 import io.opencaesar.oml2owl.utils.Complement;
 import io.opencaesar.oml2owl.utils.Difference;
 import io.opencaesar.oml2owl.utils.Intersection;
@@ -98,7 +99,7 @@ public class TestSingleton {
 	@Test
 	public void testIntersection() {
 		Singleton sl[] = {sa1, sb};
-		HashSet<Singleton> s = new HashSet<Singleton>(Arrays.asList(sl));
+		HashSet<ClassExpression> s = new HashSet<ClassExpression>(Arrays.asList(sl));
 		Intersection i = new Intersection(s);
 		assertEquals(i, sa1.intersection(sb));
 		assertEquals(i, sb.intersection(sa1));
@@ -106,7 +107,11 @@ public class TestSingleton {
 
 	@Test
 	public void testUnion() {
-		fail("Not yet implemented");
+		Singleton sl[] = {sa1, sb};
+		HashSet<ClassExpression> s = new HashSet<ClassExpression>(Arrays.asList(sl));
+		Union i = new Union(s);
+		assertEquals(i, sa1.union(sb));
+		assertEquals(i, sb.union(sa1));
 	}
 
 }
