@@ -3,6 +3,7 @@ package io.opencaesar.oml2owl.utils
 import java.util.Set
 import java.util.List
 import java.util.HashSet
+import java.util.stream.Collectors
 
 /**
  * ClassExpression implements methods for constructing class expressions,
@@ -247,7 +248,7 @@ abstract class Binary extends ClassExpression {
 	 * @return		String denoting this Binary
 	 */
 	def String toString(String op) {
-		a.toString + op + b.toString
+		a.toAtom + op + b.toAtom
 	}
 		
 }
@@ -333,9 +334,15 @@ abstract class Nary extends ClassExpression {
 	 * @return		String denoting this Nary
 	 */
 	def String toString(String c) {
-		String.join(c, s.stream().map[toString] as List<String>)
+		String.join(c, s.stream().map[toString].collect(Collectors.toList()))
 	}
 	
+	/**
+	 * @return	String string denoting this Nary as an atom
+	 */
+	 override String toAtom() {
+	 	(s.size <= 1) ? toString() : super.toAtom()
+	 }
 }
 
 /**
