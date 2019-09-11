@@ -9,24 +9,24 @@ import java.util.HashSet
  * including singleton expressions encapsulating a single class, complements, intersections,
  * and unions. While the library does not perform any mathematical reasoning, it employs
  * these theorems to simplify expressions:
+ * <ul>
+ * <li>Theorem 1: Set complement is idempotent. For any class A, (A&prime;)&prime; = A.</li>
  * 
- * Theorem 1: Set complement is idempotent. For any class A, (A′)′ = A.
+ * <li>Theorem 2: Set intersection is idempotent. For any class A, A &cap; A = A.</li>
  * 
- * Theorem 2: Set intersection is idempotent. For any class A, A ∩ A = A.
+ * <li>Theorem 3: Set intersection is commutative. For any classes A and B, A &cap; B = B &cap; A.</li>
  * 
- * Theorem 3: Set intersection is commutative. For any classes A and B, A ∩ B = B ∩ A.
+ * <li>Theorem 4: Set intersection is associative. For any classes A, B, and C,
+ * 				(A &cap; B) &cap; C = A &cap; (B &cap; C).</li>
  * 
- * Theorem 4: Set intersection is associative. For any classes A, B, and C,
- * 				(A ∩ B) ∩ C = A ∩ (B ∩ C).
+ * <li>Theorem 5: Set union is idempotent. For any class A, A &cup; A = A.</li>
  * 
- * Theorem 5: Set union is idempotent. For any class A, A ∪ A = A.
+ * <li>Theorem 6: Set union is commutative. For any classes A and B, A &cup; B = B &cup; A.</li>
  * 
- * Theorem 6: Set union is commutative. For any classes A and B, A ∪ B = B ∪ A.
+ * <li>Theorem 7: Set union is associative. For any classes A, B, and C,
+ * 				(A &cup; B) &cup; C = A &cup; (B &cup; C).</li>
  * 
- * Theorem 7: Set union is associative. For any classes A, B, and C,
- * 				(A ∪ B) ∪ C = A ∪ (B ∪ C).
- * 
- * Theorem 8: For any sets A, B, and C, (A\B)\C = A\(B∪C).
+ * <li>Theorem 8: For any sets A, B, and C, (A\B)\C = A\(B &cup; C).</li>
  * 
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
