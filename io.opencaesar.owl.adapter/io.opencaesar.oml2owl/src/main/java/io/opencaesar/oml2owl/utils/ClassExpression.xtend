@@ -440,14 +440,14 @@ class Union extends Nary {
 	 * @param		e ClassExpression
 	 * @return		Union denoting union of this Union with e (simplified)
 	 */
-	override intersection(ClassExpression e) {
+	override union(ClassExpression e) {
 		val newSet = new HashSet(s)
 		// Theorem 6
 		if (e instanceof Union)
 			newSet.addAll((e as Union).s)
 		else
 			newSet.add(e)			
-		new Intersection(newSet)
+		new Union(newSet)
 	}
 	
 }

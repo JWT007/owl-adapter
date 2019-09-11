@@ -109,9 +109,9 @@ public class TestSingleton {
 	public void testUnion() {
 		Singleton sl[] = {sa1, sb};
 		HashSet<ClassExpression> s = new HashSet<ClassExpression>(Arrays.asList(sl));
-		Union i = new Union(s);
-		assertEquals(i, sa1.union(sb));
-		assertEquals(i, sb.union(sa1));
+		Union u = new Union(s);
+		assertEquals(u, sa1.union(sb));
+		assertEquals(u, sb.union(sa1));
 	}
 
 }

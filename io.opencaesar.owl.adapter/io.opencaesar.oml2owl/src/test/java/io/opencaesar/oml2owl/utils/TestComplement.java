@@ -117,9 +117,9 @@ public class TestComplement {
 	public void testUnion() {
 		Complement sl[] = {ca1, cb};
 		HashSet<ClassExpression> s = new HashSet<ClassExpression>(Arrays.asList(sl));
-		Union i = new Union(s);
-		assertEquals(i, ca1.union(cb));
-		assertEquals(i, cb.union(ca1));
+		Union u = new Union(s);
+		assertEquals(u, ca1.union(cb));
+		assertEquals(u, cb.union(ca1));
 	}
 
 }
