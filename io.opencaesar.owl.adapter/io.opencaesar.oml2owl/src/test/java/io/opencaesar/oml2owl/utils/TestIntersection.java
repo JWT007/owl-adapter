@@ -159,7 +159,11 @@ public class TestIntersection {
 
 	@Test
 	public void testUnion() {
-		fail("Not yet implemented");
+		Intersection sl[] = {a1, a1ia2, a1ia2ib};
+		HashSet<ClassExpression> s = new HashSet<ClassExpression>(Arrays.asList(sl));
+		Union u = new Union(s);
+		assertEquals(u, a1.union(a1ia2).union(a1ia2ib));
+		assertEquals(u, a1ia2.union(a1ia2ib).union(a1));
 	}
 
 	@Test
