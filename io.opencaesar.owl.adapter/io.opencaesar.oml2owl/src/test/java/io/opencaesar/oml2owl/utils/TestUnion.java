@@ -17,6 +17,7 @@ import io.opencaesar.oml2owl.utils.Complement;
 import io.opencaesar.oml2owl.utils.Difference;
 import io.opencaesar.oml2owl.utils.Union;
 import io.opencaesar.oml2owl.utils.Intersection;
+import io.opencaesar.oml2owl.utils.Empty;
 
 public class TestUnion {
 
@@ -51,12 +52,12 @@ public class TestUnion {
 		Singleton sl1[] = {sa1, sa2, sb, sc};
 		HashSet<ClassExpression> a1l = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 1));
 		a1 = new Union(a1l);
-		HashSet<ClassExpression> a1ia2l = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 2));
-		a1ua2 = new Union(a1ia2l);
-		HashSet<ClassExpression> a1ia2ibl = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 3));
-		a1ua2ub = new Union(a1ia2ibl);
-		HashSet<ClassExpression> a1ia2ibicl = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 4));
-		a1ua2ubuc = new Union(a1ia2ibicl);
+		HashSet<ClassExpression> a1ua2l = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 2));
+		a1ua2 = new Union(a1ua2l);
+		HashSet<ClassExpression> a1ua2ubl = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 3));
+		a1ua2ub = new Union(a1ua2ubl);
+		HashSet<ClassExpression> a1ua2ubucl = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 4));
+		a1ua2ubuc = new Union(a1ua2ubucl);
 
 		Singleton sl2[] = {sa1, sb, sc};		
 		HashSet<ClassExpression> a1ibl = new HashSet<ClassExpression>(Arrays.asList(sl2).subList(0, 2));
@@ -151,10 +152,10 @@ public class TestUnion {
 
 	@Test
 	public void testDifference() {
-		Difference a1maa1ia2 = new Difference(a1, a1ua2);
-		Difference a2ia2ibma1ia2ibic = new Difference(a1ua2ub, a1ua2ub);
-		assertEquals(a1maa1ia2, a1.difference(a1ua2));
-		assertEquals(a2ia2ibma1ia2ibic, a1ua2ub.difference(a1ua2ub));
+		Empty empty = new Empty();
+		Difference diff = new Difference(a1ua2ub, a1ua2ubuc);
+		assertEquals(empty, a1.difference(a1ua2));
+		assertEquals(diff, a1ua2ub.difference(a1ua2ubuc));
 	}
 
 	@Test

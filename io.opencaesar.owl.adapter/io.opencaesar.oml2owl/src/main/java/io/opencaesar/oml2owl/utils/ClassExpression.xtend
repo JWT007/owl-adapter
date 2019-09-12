@@ -119,6 +119,13 @@ import java.util.stream.Collectors
  */
 class Universal extends ClassExpression {
 	
+	override boolean equals(Object o) {
+		o instanceof Universal
+	}
+	
+	override int hashCode() {
+		Universal.hashCode()
+	}
 	override String toString() { "𝕌" }
 	
 	override String toAtom() {
@@ -143,6 +150,13 @@ class Universal extends ClassExpression {
  */
 class Empty extends ClassExpression {
 	
+	override boolean equals(Object o) {
+		o instanceof Empty
+	}
+	
+	override int hashCode() {
+		Empty.hashCode()
+	}
 	override String toString() {
 		"∅"
 	}

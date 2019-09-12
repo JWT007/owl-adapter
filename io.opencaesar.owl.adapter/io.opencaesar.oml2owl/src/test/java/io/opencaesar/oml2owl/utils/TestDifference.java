@@ -17,6 +17,7 @@ import io.opencaesar.oml2owl.utils.Complement;
 import io.opencaesar.oml2owl.utils.Difference;
 import io.opencaesar.oml2owl.utils.Intersection;
 import io.opencaesar.oml2owl.utils.Union;
+import io.opencaesar.oml2owl.utils.Empty;
 
 public class TestDifference {
 
@@ -105,15 +106,16 @@ public class TestDifference {
 
 	@Test
 	public void testDifference1() {
+		Empty empty = new Empty();
 		Singleton bc[] = { sb, sc };
 		HashSet<ClassExpression> us = new HashSet<ClassExpression>(Arrays.asList(bc));
 		Difference ambuc = new Difference(sa1, new Union(us));
-		assertEquals(a1ma2, sa1.difference(sa2));
-		assertEquals(a2ma1, sa2.difference(sa1));
+		assertEquals(empty, sa1.difference(sa2));
+		assertEquals(empty, sa2.difference(sa1));
 		assertEquals(a1mb, sa1.difference(sb));
 		assertEquals(a2mb, sa2.difference(sb));
 		assertEquals(bma1, sb.difference(sa1));
-		assertEquals(bmb, sb.difference(sb));
+		assertEquals(empty, sb.difference(sb));
 		assertEquals(ambuc, sa1.difference(sb).difference(sc));
 		assertEquals(ambuc, sa1.difference(sc).difference(sb));
 	}
