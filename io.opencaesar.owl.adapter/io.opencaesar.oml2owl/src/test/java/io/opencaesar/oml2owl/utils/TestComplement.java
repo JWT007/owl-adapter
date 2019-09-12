@@ -75,6 +75,7 @@ public class TestComplement {
 
 	@Test
 	public void testComplement1() {
+		// Theorem 1
 		assertEquals(sa1, ca1.complement());
 		assertEquals(sa2, ca2.complement());
 		assertEquals(sb, cb.complement());

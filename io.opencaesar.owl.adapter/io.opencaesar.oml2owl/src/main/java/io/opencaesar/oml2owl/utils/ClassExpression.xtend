@@ -38,13 +38,13 @@ import java.util.stream.Collectors
  * 
  * <li>Theorem 13: For any class A, A\A = &empty;.</li>
  * 
- * <li>Theorem 14: For any class A and universal set &#x1d54c;, &#x1d54c; &cap; A = A.</li>
+ * <li>Theorem 14: For any class A and universal set U, U &cap; A = A.</li>
  * 
- * <li>Theorem 15: For any class A, &#x1d54c; &cup; A = &#x1d54c;.</li>
+ * <li>Theorem 15: For any class A, U &cup; A = U.</li>
  * 
- * <li>Theorem 16: For any class A, A\&#x1d54c; = &empty.</li>
+ * <li>Theorem 16: For any class A, A\U = &empty;.</li>
  * 
- * <li>Theorem 17: &empty;&prime; = &#x1d54c;.</li>
+ * <li>Theorem 17: &empty;&prime; = U.</li>  
  * </ul>
  * 
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
@@ -66,7 +66,7 @@ import java.util.stream.Collectors
 	def ClassExpression difference(ClassExpression e) {
 		(e instanceof Empty) ?
 			// Theorem 11
-			e :
+			this :
 				(e instanceof Universal || this.equals(e)) ?
 					//Theorem 13, Theorem 16
 					new Empty :
@@ -126,7 +126,7 @@ class Universal extends ClassExpression {
 	override int hashCode() {
 		Universal.hashCode()
 	}
-	override String toString() { "𝕌" }
+	override String toString() { "U" }
 	
 	override String toAtom() {
 		toString()
@@ -393,8 +393,13 @@ class Difference extends Binary {
 	 * 				specified ClassExpression (simplified)
 	 */
 	override ClassExpression difference(ClassExpression e) {
-		// Theorem 8
-		new Difference(a, b.union(e))
+		(e instanceof Empty) ?
+			// Theorem 11
+			this :
+				(e instanceof Universal || this.equals(e)) ?
+					//Theorem 13, Theorem 16
+					new Empty :
+						new Difference(a, b.union(e))
 	}
 	
 }

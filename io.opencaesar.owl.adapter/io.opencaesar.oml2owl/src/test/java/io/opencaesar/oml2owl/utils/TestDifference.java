@@ -13,11 +13,12 @@ import org.junit.Test;
 
 import io.opencaesar.oml2owl.utils.Singleton;
 import io.opencaesar.oml2owl.utils.ClassExpression;
+import io.opencaesar.oml2owl.utils.Empty;
+import io.opencaesar.oml2owl.utils.Universal;
 import io.opencaesar.oml2owl.utils.Complement;
 import io.opencaesar.oml2owl.utils.Difference;
 import io.opencaesar.oml2owl.utils.Intersection;
 import io.opencaesar.oml2owl.utils.Union;
-import io.opencaesar.oml2owl.utils.Empty;
 
 public class TestDifference {
 
@@ -107,17 +108,26 @@ public class TestDifference {
 	@Test
 	public void testDifference1() {
 		Empty empty = new Empty();
+		Universal universal = new Universal();
 		Singleton bc[] = { sb, sc };
 		HashSet<ClassExpression> us = new HashSet<ClassExpression>(Arrays.asList(bc));
 		Difference ambuc = new Difference(sa1, new Union(us));
-		assertEquals(empty, sa1.difference(sa2));
-		assertEquals(empty, sa2.difference(sa1));
+		// Theorem 13
 		assertEquals(a1mb, sa1.difference(sb));
 		assertEquals(a2mb, sa2.difference(sb));
 		assertEquals(bma1, sb.difference(sa1));
-		assertEquals(empty, sb.difference(sb));
 		assertEquals(ambuc, sa1.difference(sb).difference(sc));
 		assertEquals(ambuc, sa1.difference(sc).difference(sb));
+		// Theorem 11
+		assertEquals(sa1, sa1.difference(empty));
+		assertEquals(a1mb, a1mb.difference(empty));
+		// Theorem 16
+		assertEquals(empty, sa1.difference(sa2));
+		assertEquals(empty, sa2.difference(sa1));
+		assertEquals(empty, a1mb.difference(a1mb));
+		assertEquals(empty, sb.difference(sb));
+		assertEquals(empty, sa1.difference(universal));
+		assertEquals(empty, a1mb.difference(universal));
 	}
 
 	@Test
