@@ -88,9 +88,7 @@ public class TestComplement {
 		assertEquals(sa1, ca1.complement());
 		assertEquals(sa2, ca2.complement());
 		assertEquals(sb, cb.complement());
-		// Theorem 17
-		assertEquals(universal, empty.complement());
-		assertEquals(empty, universal.complement());
+		assertEquals(sa1, sa1.complement().complement());
 	}
 
 	@Test
@@ -120,6 +118,7 @@ public class TestComplement {
 		HashSet<ClassExpression> s = new HashSet<ClassExpression>(Arrays.asList(sl));
 		Union u = new Union(s);
 		assertEquals(ca1.difference(u), ca1.difference(cb).difference(cc));
+		assertEquals(ca1.difference(u), ca1.difference(cc).difference(cb));
 		// Theorem 11
 		assertEquals(ca1, ca1.difference(empty));
 		// Theorem 13
@@ -141,7 +140,6 @@ public class TestComplement {
 		assertEquals(ca1.intersection(cb), cb.intersection(ca1));
 		// Theorem 4
 		assertEquals((ca1.intersection(cb)).intersection(cc), (ca1.intersection(cb)).intersection(cc));
-		// Theorem 14
 	}
 
 	@Test

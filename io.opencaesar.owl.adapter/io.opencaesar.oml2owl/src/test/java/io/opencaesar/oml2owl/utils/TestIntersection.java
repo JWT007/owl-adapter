@@ -34,6 +34,9 @@ public class TestIntersection {
 	private Intersection a1ib;
 	private Intersection a1ibic;
 	
+	private Empty empty;
+	private Universal universal;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -48,6 +51,8 @@ public class TestIntersection {
 		sa2 = new Singleton("a");
 		sb = new Singleton("b");
 		sc = new Singleton("c");
+		empty = new Empty();
+		universal = new Universal();
 
 		Singleton sl1[] = {sa1, sa2, sb, sc};
 		HashSet<ClassExpression> a1l = new HashSet<ClassExpression>(Arrays.asList(sl1).subList(0, 1));
@@ -148,15 +153,28 @@ public class TestIntersection {
 		assertEquals(a1ia2c, a1ia2.complement());
 		assertEquals(a1ia2ibc, a1ia2ib.complement());
 		assertEquals(a1ia2ibicc, a1ia2ibic.complement());
+		// Theorem 1
+		assertEquals(a1ia2, a1ia2.complement().complement());
 	}
 
 	@Test
 	public void testDifference() {
-		Empty empty = new Empty();
 		Difference a1maa1ia2 = new Difference(a1, a1ia2);
 		Difference a2ia2ibma1ia2ibic = new Difference(a1ia2ib, a1ia2ibic);
 		assertEquals(empty, a1.difference(a1ia2));
 		assertEquals(a2ia2ibma1ia2ibic, a1ia2ib.difference(a1ia2ibic));
+		// Theorem 8
+		Intersection il[] = { a1ia2ib, a1ia2ibic };
+		HashSet<ClassExpression> us = new HashSet<ClassExpression>(Arrays.asList(il));
+		Difference d = new Difference(a1ia2, new Union(us));
+		assertEquals(d, a1ia2.difference(a1ia2ib).difference(a1ia2ibic));
+		assertEquals(d, a1ia2.difference(a1ia2ibic).difference(a1ia2ib));
+		// Theorem 11
+		assertEquals(a1ib, a1ib.difference(empty));
+		// Theorem 13
+		assertEquals(empty, a1ib.difference(a1ib));
+		// Theorem 16
+		assertEquals(empty, a1ib.difference(universal));
 	}
 
 	@Test

@@ -33,6 +33,10 @@ public class TestDifference {
 	private Difference a2mb;
 	private Difference bma1;
 	private Difference bmb;
+	private Difference bmc;
+	
+	private Empty empty;
+	private Universal universal;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -54,6 +58,9 @@ public class TestDifference {
 		a2mb = new Difference(sa2, sb);
 		bma1 = new Difference(sb, sa1);
 		bmb = new Difference(sb, sb);
+		bmc = new Difference(sb, sc);
+		empty = new Empty();
+		universal = new Universal();
 	}
 
 	@After
@@ -107,26 +114,20 @@ public class TestDifference {
 
 	@Test
 	public void testDifference1() {
-		Empty empty = new Empty();
-		Universal universal = new Universal();
-		Singleton bc[] = { sb, sc };
-		HashSet<ClassExpression> us = new HashSet<ClassExpression>(Arrays.asList(bc));
-		Difference ambuc = new Difference(sa1, new Union(us));
-		// Theorem 13
 		assertEquals(a1mb, sa1.difference(sb));
 		assertEquals(a2mb, sa2.difference(sb));
 		assertEquals(bma1, sb.difference(sa1));
-		assertEquals(ambuc, sa1.difference(sb).difference(sc));
-		assertEquals(ambuc, sa1.difference(sc).difference(sb));
+		// Theorem 8
+		Difference dl[] = { bma1, bmc };
+		HashSet<ClassExpression> us = new HashSet<ClassExpression>(Arrays.asList(dl));
+		Difference d = new Difference(sa1, new Union(us));
+		assertEquals(d, sa1.difference(bma1).difference(bmc));
+		assertEquals(d, sa1.difference(bmc).difference(bma1));
 		// Theorem 11
-		assertEquals(sa1, sa1.difference(empty));
 		assertEquals(a1mb, a1mb.difference(empty));
-		// Theorem 16
-		assertEquals(empty, sa1.difference(sa2));
-		assertEquals(empty, sa2.difference(sa1));
+		// Theorem 13
 		assertEquals(empty, a1mb.difference(a1mb));
-		assertEquals(empty, sb.difference(sb));
-		assertEquals(empty, sa1.difference(universal));
+		// Theorem 16
 		assertEquals(empty, a1mb.difference(universal));
 	}
 
@@ -183,6 +184,8 @@ public class TestDifference {
 		assertEquals(a1ma2c, a2ma1.complement());
 		assertEquals(a1mbc, a1mb.complement());
 		assertEquals(a1mbc, a2mb.complement());
+		// Theorem 1
+		assertEquals(a1mb, a1mb.complement().complement());
 	}
 
 	@Test
@@ -192,6 +195,12 @@ public class TestDifference {
 		Intersection i = new Intersection(s);
 		assertEquals(i, a1ma2.intersection(a1mb));
 		assertEquals(i, a1mb.intersection(a1ma2));
+		// Theorem 2
+		assertEquals(a1mb, a1mb.intersection(a1mb));
+		// Theorem 3
+		assertEquals(a1mb.intersection(bmc), bmc.intersection(a1mb));
+		// Theorem 4
+		assertEquals((a1mb.intersection(bmb)).intersection(bmc), (a1mb.intersection(bmb)).intersection(bmc));
 	}
 
 	@Test
@@ -201,6 +210,12 @@ public class TestDifference {
 		Union u = new Union(s);
 		assertEquals(u, a1ma2.union(a1mb));
 		assertEquals(u, a1mb.union(a1ma2));
+		// Theorem 5
+		assertEquals(a1mb, a1mb.union(a1mb));
+		// Theorem 6
+		assertEquals(a1mb.union(bmc), bmc.union(a1mb));
+		// Theorem 7
+		assertEquals((a1mb.union(bmb)).union(bmc), (a1mb.union(bmb)).union(bmc));
 	}
 
 	@Test
