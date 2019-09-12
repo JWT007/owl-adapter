@@ -26,7 +26,25 @@ import java.util.stream.Collectors
  * <li>Theorem 7: Set union is associative. For any classes A, B, and C,
  * 				(A &cup; B) &cup; C = A &cup; (B &cup; C).</li>
  * 
- * <li>Theorem 8: For any sets A, B, and C, (A\B)\C = A\(B &cup; C).</li>
+ * <li>Theorem 8: For any classes A, B, and C, (A\B)\C = A\(B &cup; C).</li>
+ * 
+ * <li>Theorem 9: For any class A and empty set &empty;, &empty; &cap; A = &empty;.</li>
+ * 
+ * <li>Theorem 10: For any class A, &empty; &cup; A = A.</li>
+ * 
+ * <li>Theorem 11: For any class A, A\&empty; = A.</li>
+ * 
+ * <li>Theorem 12: For any class A, &empty;\A = &empty;.</li>
+ * 
+ * <li>Theorem 13: For any class A, A\A = &empty;.</li>
+ * 
+ * <li>Theorem 14: For any class A and universal set &#x1d54c;, &#x1d54c; &cap; A = A.</li>
+ * 
+ * <li>Theorem 15: For any class A, &#x1d54c; &cup; A = &#x1d54c;.</li>
+ * 
+ * <li>Theorem 16: For any class A, A\&#x1d54c; = &empty.</li>
+ * 
+ * <li>Theorem 17: &empty;&prime; = &#x1d54c;.</li>
  * </ul>
  * 
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
@@ -45,7 +63,15 @@ import java.util.stream.Collectors
 	 * @return		ClassExpression The difference of this ClassExpression and another
 	 * 				specified ClassExpression
 	 */
-	def ClassExpression difference(ClassExpression e) { new Difference(this, e) }
+	def ClassExpression difference(ClassExpression e) {
+		(e instanceof Empty) ?
+			// Theorem 11
+			e :
+				(e instanceof Universal || this.equals(e)) ?
+					//Theorem 13, Theorem 16
+					new Empty :
+						new Difference(this, e)
+	}
 	
 	/**
 	 * @param		e ClassExpression 
@@ -55,10 +81,10 @@ import java.util.stream.Collectors
 	def ClassExpression intersection(ClassExpression e) {
 		this.equals(e) ?
 			// Theorem 2
-			this :
-				(e instanceof Intersection) ?
+			this:
+				(e instanceof Intersection || e instanceof Empty || e instanceof Universal) ?
 					// Theorem 3
-					e.intersection(this) : 
+					e.intersection(this) :
 						new Intersection(new HashSet<ClassExpression>(#[this, e]))
 	}
 	
@@ -70,8 +96,8 @@ import java.util.stream.Collectors
 	def ClassExpression union(ClassExpression e) {
 		this.equals(e) ?
 			// Theorem 5
-			this :
-				(e instanceof Union) ?
+			this:
+				(e instanceof Union || e instanceof Empty || e instanceof Universal) ?
 					// Theorem 6
 					e.union(this) :
 						new Union(new HashSet<ClassExpression>(#[this, e]))		
@@ -82,6 +108,58 @@ import java.util.stream.Collectors
 	 */
 	def String toAtom() { "(" + toString + ")"}
 	
+}
+
+/**
+ * Universal implements methods for ClassExpressions that denote the universal set.
+
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
+ * @version		0.0.1
+ * @since		0.0.1
+ */
+class Universal extends ClassExpression {
+	
+	override String toString() { "𝕌" }
+	
+	override String toAtom() {
+		toString()
+	}
+	
+	// Theorems 1, 17
+	override ClassExpression complement() { new Empty }
+	// Theorem 14
+	override ClassExpression intersection(ClassExpression e) { e }
+	// Theorem 15
+	override ClassExpression union(ClassExpression e) { this }
+	
+}
+
+/**
+ * Empty implements methods for ClassExpressions that denote the empty set.
+
+ * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
+ * @version		0.0.1
+ * @since		0.0.1
+ */
+class Empty extends ClassExpression {
+	
+	override String toString() {
+		"∅"
+	}
+	
+	override String toAtom() {
+		toString()
+	}
+	
+	// Theorem 17
+	override ClassExpression complement() { new Universal }
+	// Theorem 12
+	override ClassExpression difference(ClassExpression e) { this }
+	// Theorem 9
+	override ClassExpression intersection(ClassExpression e) { this }
+	// Theorem 10
+	override ClassExpression union(ClassExpression e) { e }
+		
 }
 
 /**
@@ -291,7 +369,7 @@ class Difference extends Binary {
 	/**
 	 * @return		String denoting this Difference
 	 */
-	override toString() {
+	override String toString() {
 		toString("\\")
 	}
 	
@@ -300,7 +378,7 @@ class Difference extends Binary {
 	 * @return		ClassExpression The difference of this ClassExpression and another
 	 * 				specified ClassExpression (simplified)
 	 */
-	override difference(ClassExpression e) {
+	override ClassExpression difference(ClassExpression e) {
 		// Theorem 8
 		new Difference(a, b.union(e))
 	}
@@ -389,7 +467,7 @@ class Intersection extends Nary {
 	 * @param		e ClassExpression
 	 * @return		Intersection denoting intersection of this Intersection with e (simplified)
 	 */
-	override intersection(ClassExpression e) {		
+	override ClassExpression intersection(ClassExpression e) {		
 		val newSet = new HashSet(s)		
 		// Theorem 4
 		if (e instanceof Intersection)
@@ -446,9 +524,9 @@ class Union extends Nary {
 	 * @param		e ClassExpression
 	 * @return		Union denoting union of this Union with e (simplified)
 	 */
-	override union(ClassExpression e) {
+	override ClassExpression union(ClassExpression e) {
 		val newSet = new HashSet(s)
-		// Theorem 6
+		// Theorem 7
 		if (e instanceof Union)
 			newSet.addAll((e as Union).s)
 		else
