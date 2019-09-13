@@ -112,6 +112,13 @@ public class TestIntersection {
 		assertEquals(a1ia2ibic, a1ia2.intersection(sb).intersection(sc));
 		assertEquals(a1ia2ibic, a1ia2.intersection(sc).intersection(sb));
 		assertEquals(a1ia2ibic, a1ia2ib.intersection(sc));
+		// Theorem 2
+		assertEquals(a1ia2, a1ia2.intersection(a1ia2));
+		// Theorem 3
+		assertEquals(a1ia2.intersection(a1ia2ib), a1ia2ib.intersection(a1ia2));
+		// Theorem 4
+		assertEquals((a1ia2.intersection(a1ia2ib)).intersection(a1ia2ibic),
+				(a1ia2.intersection(a1ia2ib)).intersection(a1ia2ibic));
 	}
 
 	@Test
@@ -183,6 +190,13 @@ public class TestIntersection {
 		Union u = new Union(s);
 		assertEquals(u, a1.union(a1ia2).union(a1ia2ib));
 		assertEquals(u, a1ia2.union(a1ia2ib).union(a1));
+		// Theorem 2
+		assertEquals(a1ia2, a1ia2.union(a1ia2));
+		// Theorem 3
+		assertEquals(a1ia2.union(a1ia2ib), a1ia2ib.union(a1ia2));
+		// Theorem 4
+		assertEquals((a1ia2.union(a1ia2ib)).union(a1ia2ibic),
+				(a1ia2.union(a1ia2ib)).union(a1ia2ibic));
 	}
 
 	@Test

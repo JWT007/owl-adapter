@@ -157,6 +157,7 @@ class Empty extends ClassExpression {
 	override int hashCode() {
 		Empty.hashCode()
 	}
+	
 	override String toString() {
 		"∅"
 	}
