@@ -159,7 +159,6 @@ public class TestIntersection {
 
 	@Test
 	public void testDifference() {
-		Difference a1maa1ia2 = new Difference(a1, a1ia2);
 		Difference a2ia2ibma1ia2ibic = new Difference(a1ia2ib, a1ia2ibic);
 		assertEquals(empty, a1.difference(a1ia2));
 		assertEquals(a2ia2ibma1ia2ibic, a1ia2ib.difference(a1ia2ibic));
