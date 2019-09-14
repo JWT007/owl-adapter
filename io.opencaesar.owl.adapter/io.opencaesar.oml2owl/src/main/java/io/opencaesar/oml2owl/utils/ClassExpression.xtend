@@ -111,7 +111,7 @@ import java.util.stream.Collectors
 }
 
 /**
- * Universal implements methods for ClassExpressions that denote the universal set.
+ * Universal implements methods for ClassExpressions that denote the universal class.
 
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
@@ -119,30 +119,57 @@ import java.util.stream.Collectors
  */
 class Universal extends ClassExpression {
 	
+	/**
+	 * @param		o Object
+	 * @return		boolean true if and only if o is a Universal
+	 */
 	override boolean equals(Object o) {
 		o instanceof Universal
 	}
 	
+	/**
+	 * @return		int hash code of Universal
+	 */
 	override int hashCode() {
 		Universal.hashCode()
 	}
+	
+	/**
+	 * @return		String a string representation of the Universal
+	 */
 	override String toString() { "U" }
 	
+	/**
+	 * @return		String a string representation of the Universal as an atom
+	 */
 	override String toAtom() {
 		toString()
 	}
 	
 	// Theorems 1, 17
+	/**
+	 * @return		Empty the complement of the Universal
+	 */
 	override ClassExpression complement() { new Empty }
+
 	// Theorem 14
+	/**
+	 * @param		e ClassExpression 
+	 * @return		ClassExpression e
+	 */	
 	override ClassExpression intersection(ClassExpression e) { e }
+
 	// Theorem 15
+	/**
+	 * @param		e ClassExpression 
+	 * @return		Universal
+	 */	
 	override ClassExpression union(ClassExpression e) { this }
 	
 }
 
 /**
- * Empty implements methods for ClassExpressions that denote the empty set.
+ * Empty implements methods for ClassExpressions that denote the empty class.
 
  * @author		Steven Jenkins j.s.jenkins@jpl.nasa.gov
  * @version		0.0.1
@@ -150,29 +177,60 @@ class Universal extends ClassExpression {
  */
 class Empty extends ClassExpression {
 	
+	/**
+	 * @param		o Object
+	 * @return		boolean true if and only if o is an Empty
+	 */
 	override boolean equals(Object o) {
 		o instanceof Empty
 	}
 	
+	/**
+	 * @return		int hash code of Empty
+	 */
 	override int hashCode() {
 		Empty.hashCode()
 	}
 	
+	/**
+	 * @return		String a string representation of the Empty
+	 */
 	override String toString() {
 		"∅"
 	}
 	
+	/**
+	 * @return		String a string representation of the Empty as an atom
+	 */
 	override String toAtom() {
 		toString()
 	}
 	
 	// Theorem 17
+	/**
+	 * @return		Universal the complement of the Empty
+	 */
 	override ClassExpression complement() { new Universal }
+	
 	// Theorem 12
+	/**
+	 * @param		e ClassExpression
+	 * @return		Empty
+	 */
 	override ClassExpression difference(ClassExpression e) { this }
+
 	// Theorem 9
+	/**
+	 * @param		e ClassExpression
+	 * @return		Empty
+	 */
 	override ClassExpression intersection(ClassExpression e) { this }
+	
 	// Theorem 10
+	/**
+	 * @param		e ClassExpression
+	 * @return		ClassExpression e
+	 */
 	override ClassExpression union(ClassExpression e) { e }
 		
 }
