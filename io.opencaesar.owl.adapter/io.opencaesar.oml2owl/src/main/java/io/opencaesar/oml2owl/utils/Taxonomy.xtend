@@ -34,4 +34,21 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 	def Optional<ClassExpression> multiParentChild() {
 		vertexSet.stream.filter[parentsOf.length > 1].findFirst
 	}
+	
+	def Taxonomy bypass_parent(ClassExpression child, ClassExpression parent) {
+		
+		val Taxonomy g = new Taxonomy
+		
+		vertexSet.forEach[ClassExpression v | g.addVertex(v)]
+		
+		edgeSet.stream.filter[getEdgeSource() != parent && getEdgeTarget != child].forEach[
+			DefaultEdge e | g.addEdge(e.getEdgeSource)
+		]
+		
+		g
+	}
+	
+	def Taxonomy bypass_parents(ClassExpression child, Set<ClassExpression> parents) {
+		this
+	}
 }
