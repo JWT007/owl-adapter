@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class TestDoubleEdgeTaxonomy {
+public class TestDoubleEdgeChainTaxonomy {
 
 	Taxonomy t;
 	Singleton a;
@@ -57,14 +57,14 @@ public class TestDoubleEdgeTaxonomy {
 	public void childrenOf() {
 		assertEquals(setB, t.childrenOf(a));
 		assertEquals(setC, t.childrenOf(b));
-		assert(t.childrenOf(c).isEmpty());
+		assertTrue(t.childrenOf(c).isEmpty());
 	}
 	
 	@Test
 	public void descendantsOf() {
-		assertEquals(setBC, t.childrenOf(b));
-		assertEquals(setB, t.descendantsOf(b));
-		assert(t.descendantsOf(c).isEmpty());
+		assertEquals(setBC, t.descendantsOf(a));
+		assertEquals(setC, t.descendantsOf(b));
+		assertTrue(t.descendantsOf(c).isEmpty());
 	}
 	
 	@Test
@@ -83,7 +83,7 @@ public class TestDoubleEdgeTaxonomy {
 	
 	@Test
 	public void testMultiParentChild() {
-		assert(!t.multiParentChild().isPresent());
+		assertFalse(t.multiParentChild().isPresent());
 	}
 
 }

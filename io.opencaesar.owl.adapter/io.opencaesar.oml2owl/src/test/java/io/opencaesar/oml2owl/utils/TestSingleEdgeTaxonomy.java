@@ -69,7 +69,7 @@ public class TestSingleEdgeTaxonomy {
 	
 	@Test
 	public void testMultiParentChild() {
-		assert(!t.multiParentChild().isPresent());
+		assertFalse(t.multiParentChild().isPresent());
 	}
 
 }
