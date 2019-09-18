@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>io.opencaesar.oml2owl</name>
-	<comment></comment>
+	<comment>Oml to Owl Interface</comment>
 	<projects>
 	</projects>
 	<buildSpec>
