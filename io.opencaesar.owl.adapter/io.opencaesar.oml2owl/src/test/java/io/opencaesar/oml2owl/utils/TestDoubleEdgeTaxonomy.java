@@ -11,13 +11,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class TestSingleEdgeTaxonomy {
+public class TestDoubleEdgeTaxonomy {
 
 	Taxonomy t;
 	Singleton a;
 	Singleton b;
+	Singleton c;
 	HashSet<ClassExpression> setA;
+	HashSet<ClassExpression> setAB;
 	HashSet<ClassExpression> setB;
+	HashSet<ClassExpression> setBC;
+	HashSet<ClassExpression> setC;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -32,11 +36,17 @@ public class TestSingleEdgeTaxonomy {
 		t = new Taxonomy();
 		a = new Singleton("a");
 		b = new Singleton("b");
+		c = new Singleton("c");
 		setA = new HashSet<ClassExpression>(Arrays.asList(a));
+		setAB = new HashSet<ClassExpression>(Arrays.asList(a, b));
 		setB = new HashSet<ClassExpression>(Arrays.asList(b));
+		setBC = new HashSet<ClassExpression>(Arrays.asList(b, c));
+		setC = new HashSet<ClassExpression>(Arrays.asList(c));
 		t.addVertex(a);
 		t.addVertex(b);
-		t.addEdge(a,  b);
+		t.addVertex(c);
+		t.addEdge(a, b);
+		t.addEdge(b, c);
 	}
 
 	@After
@@ -46,25 +56,29 @@ public class TestSingleEdgeTaxonomy {
 	@Test
 	public void childrenOf() {
 		assertEquals(setB, t.childrenOf(a));
-		assert(t.childrenOf(b).isEmpty());
+		assertEquals(setC, t.childrenOf(b));
+		assert(t.childrenOf(c).isEmpty());
 	}
 	
 	@Test
 	public void descendantsOf() {
-		assertEquals(setB, t.descendantsOf(a));
-		assert(t.descendantsOf(b).isEmpty());
+		assertEquals(setBC, t.childrenOf(b));
+		assertEquals(setB, t.descendantsOf(b));
+		assert(t.descendantsOf(c).isEmpty());
 	}
 	
 	@Test
 	public void parentsOf() {
-		assertEquals(setA, t.parentsOf(b));
 		assert(t.parentsOf(a).isEmpty());
+		assertEquals(setA, t.parentsOf(b));
+		assertEquals(setB, t.parentsOf(c));
 	}
 	
 	@Test
 	public void ancestorsOf() {
-		assertEquals(setA, t.ancestorsOf(b));
 		assert(t.ancestorsOf(a).isEmpty());
+		assertEquals(setA, t.ancestorsOf(b));
+		assertEquals(setAB, t.ancestorsOf(c));
 	}
 	
 	@Test
