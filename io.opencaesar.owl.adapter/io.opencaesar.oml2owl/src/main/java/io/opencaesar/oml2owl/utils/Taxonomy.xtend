@@ -1,22 +1,29 @@
 package io.opencaesar.oml2owl.utils
 
-import java.util.List
-import java.util.Set
-import java.util.HashSet
-import java.util.stream.Collectors
 import java.util.Optional
+import java.util.Set
+import java.util.Map
+import java.util.stream.Collectors
+import java.util.HashMap
 
 import org.eclipse.xtext.util.Tuples
 
-import org.jgrapht.graph.DirectedAcyclicGraph
 import org.jgrapht.graph.DefaultEdge
-import io.opencaesar.oml2owl.utils.ClassExpression
-import java.util.List
+import org.jgrapht.graph.DirectedAcyclicGraph
 
 class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 	
 	new() {
 		super(DefaultEdge)
+	}
+	
+	new(Map<String, String> edgeMap) {
+		super(DefaultEdge)
+		val Set<String> vertexNames = edgeMap.keySet
+		vertexNames.addAll(edgeMap.values)
+		val HashMap<String, Singleton> vertexMap = new HashMap<String, Singleton>
+		vertexNames.forEach[ vn | vertexMap.put(vn, new Singleton(vn)) ]
+		edgeMap.forEach[ pn, cn | addEdge(vertexMap.get(pn), vertexMap.get(cn)) ]
 	}
 	
 	def Set<ClassExpression> childrenOf(ClassExpression v) {
@@ -47,21 +54,41 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 		vertexSet.stream.filter[parentsOf.length > 1].findFirst
 	}
 	
+	/**
+	 * Bypass a single parent of a child.
+	 * 
+	 * @param	child ClassExpression
+	 * @param	parent ClassExpression
+	 * @return Taxonomy
+	 */
 	def Taxonomy bypass_parent(ClassExpression child, ClassExpression parent) {
 		
 		val Taxonomy g = new Taxonomy
 		
+		// Copy all vertices.
+		
 		vertexSet.forEach[ClassExpression v | g.addVertex(v)]
+		
+		// Copy all edges except that from parent to child.
 		
 		edgeSet.stream.map[DefaultEdge e | Tuples.pair(e.getEdgeSource, e.getEdgeTarget)]
 			.filter[getFirst != parent && getSecond != child]
 			.forEach[p | g.addEdge(p.getFirst, p.getSecond)]
+		
+		// Add edges from direct grandparents to child.
 		
 		directParentsOf(parent).forEach[ gp | g.addEdge(gp, child)]
 		
 		g
 	}
 	
+	/*
+	 * Recursively bypass parents of a child.
+	 * 
+	 * @param	child ClassExpression
+	 * @param	parent ClassExpression
+	 * @return Taxonomy
+	 */
 	def Taxonomy bypass_parents(ClassExpression child, Set<ClassExpression> parents) {
 		
 		if (parents.isEmpty)
