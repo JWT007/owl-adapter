@@ -64,17 +64,15 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 	
 	def Taxonomy bypass_parents(ClassExpression child, Set<ClassExpression> parents) {
 		
-		var List<ClassExpression> pl
-		var ClassExpression first
-		var Set<ClassExpression> rest
-		
 		if (parents.isEmpty)
-			return this
-		else
-			pl = parents.stream.collect(Collectors.toList)
-			first = pl.get(0)
-			rest = pl.drop(1).toSet
-			return bypass_parent(child, first).bypass_parents(child, rest)
-			
+			this
+		else {
+			val pl = parents.toList
+			val first = pl.get(0)
+			val rest = pl.drop(1).toSet
+			bypass_parent(child, first).bypass_parents(child, rest)
+		}
+		
 	}
+	
 }
