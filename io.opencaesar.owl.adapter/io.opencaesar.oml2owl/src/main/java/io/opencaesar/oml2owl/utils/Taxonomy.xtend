@@ -4,7 +4,6 @@ import java.util.Optional
 import java.util.Set
 import java.util.Map
 import java.util.stream.Collectors
-import java.util.HashMap
 
 import org.eclipse.xtext.util.Tuples
 
@@ -17,13 +16,12 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 		super(DefaultEdge)
 	}
 	
-	new(Map<String, String> edgeMap) {
+	new(Map<ClassExpression, ClassExpression> edgeMap) {
 		super(DefaultEdge)
-		val Set<String> vertexNames = edgeMap.keySet
-		vertexNames.addAll(edgeMap.values)
-		val HashMap<String, Singleton> vertexMap = new HashMap<String, Singleton>
-		vertexNames.forEach[ vn | vertexMap.put(vn, new Singleton(vn)) ]
-		edgeMap.forEach[ pn, cn | addEdge(vertexMap.get(pn), vertexMap.get(cn)) ]
+		val Set<ClassExpression> vertexSet = edgeMap.keySet
+		vertexSet.addAll(edgeMap.values)
+		vertexSet.forEach[ v | addVertex(v)]
+		edgeMap.forEach[ p, c | addEdge(p, c) ]
 	}
 	
 	def Set<ClassExpression> childrenOf(ClassExpression v) {
