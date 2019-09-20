@@ -184,7 +184,7 @@ public class TestAsymmetricTaxonomy {
 				"i\\k", "j\\k"
 				).collect(Collectors.toList());
 
-		vertexMap.put("c\\(i∪k)", vertexMap.get("c").difference(vertexMap.get("i")).difference(vertexMap.get("k")));
+		vertexMap.put("c\\(i∪k)", vertexMap.get("c").difference((vertexMap.get("i")).union(vertexMap.get("k"))));
 		vertexMap.put("f\\k", vertexMap.get("f").difference(vertexMap.get("k")));
 		vertexMap.put("i\\k", vertexMap.get("i").difference(vertexMap.get("k")));
 		vertexMap.put("j\\k", vertexMap.get("j").difference(vertexMap.get("k")));
