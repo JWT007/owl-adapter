@@ -25,6 +25,7 @@ public class TestAsymmetricTaxonomy {
 	Taxonomy afterBypassAllTaxonomy;
 	Taxonomy afterReduceTaxonomy;
 	Taxonomy afterIsolateOneTaxonomy;
+	Taxonomy afterIsolateAllTaxonomy;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -137,6 +138,25 @@ public class TestAsymmetricTaxonomy {
 				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
 		afterIsolateOneTaxonomy = new Taxonomy(afterIsolateOneEdgeList);
+
+		List<String> afterIsolateAllEdgeSpec = Stream.of(
+				"a", "b",
+				"a", "c\\i",
+				"b", "d",
+				"b", "e\\i",
+				"b", "i",
+				"c\\i", "f",
+				"c\\i", "g",
+				"e\\i", "h",
+				"i", "j"
+				).collect(Collectors.toList());
+
+		vertexMap.put("e\\i", vertexMap.get("e").difference(vertexMap.get("i")));
+		
+		List<ClassExpression> afterIsolateAllEdgeList = afterIsolateAllEdgeSpec.stream()
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
+		
+		afterIsolateAllTaxonomy = new Taxonomy(afterIsolateAllEdgeList);
 }
 
 	@After
@@ -212,10 +232,16 @@ public class TestAsymmetricTaxonomy {
 	}
 
 	@Test
-	public void testIsolateChildFromParent() {
+	public void testIsolateChildFromOne() {
 		ClassExpression c = vertexMap.get("c");
 		ClassExpression i = vertexMap.get("i");
-		assertEquals(afterIsolateOneTaxonomy, afterReduceTaxonomy.isolateChild(i, c));
+		assertEquals(afterIsolateOneTaxonomy, afterReduceTaxonomy.isolateChildFromOne(i, c));
+	}
+
+	@Test
+	public void testIsolateChild() {
+		ClassExpression i = vertexMap.get("i");
+		assertEquals(afterIsolateAllTaxonomy, afterReduceTaxonomy.isolateChild(i, initialTaxonomy.parentsOf(i)));
 	}
 
 }

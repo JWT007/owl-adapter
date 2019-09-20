@@ -109,7 +109,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 * Recursively bypass parents of a child.
 	 * 
 	 * @param	child ClassExpression
-	 * @param	parent ClassExpression
+	 * @param	parents Set<ClassExpression>
 	 * @return Taxonomy
 	 */
 	def Taxonomy bypass_parents(ClassExpression child, Set<ClassExpression> parents) {
@@ -161,7 +161,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 * @return Taxonomy
 	 * 
 	 */
-	def isolateChild(ClassExpression child, ClassExpression parent) {
+	def isolateChildFromOne(ClassExpression child, ClassExpression parent) {
 		if (parentsOf(parent).isEmpty) {
 			this
 		} else {
@@ -191,5 +191,24 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 			g
 		}
 			
+	}
+	/*
+	 * Recursively isolate child from parents.
+	 * 
+	 * @param	child ClassExpression
+	 * @param	parents Set<ClassExpression>
+	 * @return Taxonomy
+	 */
+	def Taxonomy isolateChild(ClassExpression child, Set<ClassExpression> parents) {
+		
+		if (parents.isEmpty)
+			this
+		else {
+			val pl = parents.toList
+			val first = pl.get(0)
+			val rest = pl.drop(1).toSet
+			isolateChildFromOne(child, first).isolateChild(child, rest)
+		}
+		
 	}
 }
