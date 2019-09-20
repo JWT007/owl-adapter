@@ -3,7 +3,6 @@ package io.opencaesar.oml2owl.utils
 import java.util.Optional
 import java.util.HashSet
 import java.util.Set
-import java.util.Map
 import java.util.List
 import java.util.stream.Collectors
 
@@ -12,14 +11,27 @@ import org.eclipse.xtext.util.Tuples
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DirectedAcyclicGraph
 
-class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
+class TaxonomyEdge extends DefaultEdge {
+	
+	override hashCode() {
+		#[getSource, getTarget].hashCode
+	}
+	
+	override equals(Object o) {
+		(o instanceof TaxonomyEdge)
+			&& (o as TaxonomyEdge).getSource == getSource
+			&& (o as TaxonomyEdge).getTarget == getTarget
+	}
+}
+
+class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	
 	new() {
-		super(DefaultEdge)
+		super(TaxonomyEdge)
 	}
 	
 	new(List<ClassExpression> edgeList) {
-		super(DefaultEdge)
+		super(TaxonomyEdge)
 		val HashSet<ClassExpression> vertexSet = new HashSet<ClassExpression>
 		vertexSet.addAll(edgeList)
 		vertexSet.forEach[ v | addVertex(v)]
@@ -52,7 +64,10 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 	}
 	
 	def Set<ClassExpression> directParentsOf(ClassExpression v) {
-		parentsOf(v).stream.filter[c | !ancestorsOf(v).contains(c)].collect(Collectors.toSet)
+		val Set<ClassExpression> p = parentsOf(v)
+		val HashSet<ClassExpression> pa = new HashSet<ClassExpression>
+		p.forEach[ e | pa.addAll(ancestorsOf(e))]
+		p.stream.filter[e | !pa.contains(e)].collect(Collectors.toSet)
 	}
 	
 	def Optional<ClassExpression> multiParentChild() {
@@ -76,8 +91,8 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 		
 		// Copy all edges except that from parent to child.
 		
-		edgeSet.stream.map[DefaultEdge e | Tuples.pair(e.getEdgeSource, e.getEdgeTarget)]
-			.filter[getFirst != parent && getSecond != child]
+		edgeSet.stream.map[TaxonomyEdge e | Tuples.pair(e.getEdgeSource, e.getEdgeTarget)]
+			.filter[getFirst != parent || getSecond != child]
 			.forEach[p | g.addEdge(p.getFirst, p.getSecond)]
 		
 		// Add edges from direct grandparents to child.

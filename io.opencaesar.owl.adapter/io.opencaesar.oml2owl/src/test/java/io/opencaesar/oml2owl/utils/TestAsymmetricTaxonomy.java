@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,10 +19,11 @@ import org.junit.Test;
 public class TestAsymmetricTaxonomy {
 
 	
-	HashMap<String, ClassExpression> initialVertexMap = new HashMap<String, ClassExpression>();
+	HashMap<String, ClassExpression> vertexMap = new HashMap<String, ClassExpression>();
 	Taxonomy initialTaxonomy;
 	
-	Taxonomy afterBypassTaxonomy;
+	Taxonomy afterBypassOneTaxonomy;
+	Taxonomy afterBypassAllTaxonomy;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -33,6 +35,8 @@ public class TestAsymmetricTaxonomy {
 
 	@Before
 	public void setUp() throws Exception {
+		
+		// Initial Taxonomy
 		
 		List<String> initialEdgeSpec = Stream.of(
 				"a", "b",
@@ -49,14 +53,36 @@ public class TestAsymmetricTaxonomy {
 		
 		Set<String> initialVertexNames = initialEdgeSpec.stream().collect(Collectors.toSet());
 		
-		initialVertexNames.forEach((String vn) -> { initialVertexMap.put(vn, new Singleton(vn)); } );
+		initialVertexNames.forEach((String vn) -> { vertexMap.put(vn, new Singleton(vn)); } );
 		
 		List<ClassExpression> initialEdgeList = initialEdgeSpec.stream()
-				.map((String e) -> initialVertexMap.get(e)).collect(Collectors.toList());
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
 		initialTaxonomy = new Taxonomy(initialEdgeList);
 		
-		List<String> afterBypassEdgeSpec = Stream.of(
+		// After bypass(i, c)
+		
+		List<String> afterBypassOneEdgeSpec = Stream.of(
+				"a", "b",
+				"a", "c",
+				"b", "d",
+				"b", "e",
+				"c", "f",
+				"c", "g",
+				"a", "i",
+				"e", "h",
+				"e", "i",
+				"i", "j"
+				).collect(Collectors.toList());
+
+		List<ClassExpression> afterBypassOneEdgeList = afterBypassOneEdgeSpec.stream()
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
+		
+		afterBypassOneTaxonomy = new Taxonomy(afterBypassOneEdgeList);
+		
+		// After bypass(i, {c, e})
+		
+		List<String> afterBypassAllEdgeSpec = Stream.of(
 				"a", "b",
 				"a", "c",
 				"a", "i",
@@ -69,10 +95,10 @@ public class TestAsymmetricTaxonomy {
 				"i", "j"
 				).collect(Collectors.toList());
 
-		List<ClassExpression> afterBypassEdgeList = afterBypassEdgeSpec.stream()
-				.map((String e) -> initialVertexMap.get(e)).collect(Collectors.toList());
+		List<ClassExpression> afterBypassAllEdgeList = afterBypassAllEdgeSpec.stream()
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
-		afterBypassTaxonomy = new Taxonomy(afterBypassEdgeList);
+		afterBypassAllTaxonomy = new Taxonomy(afterBypassAllEdgeList);
 }
 
 	@After
@@ -81,12 +107,16 @@ public class TestAsymmetricTaxonomy {
 
 	@Test
 	public void testChildrenOf() {
-		fail("Not yet implemented");
+		Set<ClassExpression> bc = Stream.of("b", "c")
+				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
+		assertEquals(bc, initialTaxonomy.childrenOf(vertexMap.get("a")));
 	}
 
 	@Test
 	public void testDescendantsOf() {
-		fail("Not yet implemented");
+		Set<ClassExpression> bcdefghij = Stream.of("b", "c", "d", "e", "f", "g", "h", "i", "j")
+				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
+		assertEquals(bcdefghij, initialTaxonomy.descendantsOf(vertexMap.get("a")));
 	}
 
 	@Test
@@ -96,34 +126,45 @@ public class TestAsymmetricTaxonomy {
 
 	@Test
 	public void testParentsOf() {
-		fail("Not yet implemented");
+		Set<ClassExpression> ce = Stream.of("c", "e")
+				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
+		assertEquals(ce, initialTaxonomy.parentsOf(vertexMap.get("i")));
 	}
 
 	@Test
 	public void testAncestorsOf() {
-		fail("Not yet implemented");
+		Set<ClassExpression> abce = Stream.of("a", "b", "c", "e")
+				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
+		assertEquals(abce, initialTaxonomy.ancestorsOf(vertexMap.get("i")));
 	}
 
 	@Test
 	public void testDirectParentsOf() {
-		fail("Not yet implemented");
+		Set<ClassExpression> ce = Stream.of("c", "e")
+				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
+		assertEquals(ce, initialTaxonomy.directParentsOf(vertexMap.get("i")));
 	}
 
 	@Test
 	public void testMultiParentChild() {
 		Optional<ClassExpression> childOption = initialTaxonomy.multiParentChild();
 		assertTrue(childOption.isPresent());
-		assertEquals(initialVertexMap.get("i"), childOption.get());
+		assertEquals(vertexMap.get("i"), childOption.get());
 	}
 
 	@Test
 	public void testBypass_parent() {
-		fail("Not yet implemented");
+		ClassExpression c = vertexMap.get("c");
+		ClassExpression i = vertexMap.get("i");
+		assertEquals(afterBypassOneTaxonomy.vertexSet(), initialTaxonomy.bypass_parent(i, c).vertexSet());
+		assertEquals(afterBypassOneTaxonomy.edgeSet(), initialTaxonomy.bypass_parent(i, c).edgeSet());
+		assertEquals(afterBypassOneTaxonomy, initialTaxonomy.bypass_parent(i, c));
 	}
 
 	@Test
 	public void testBypass_parents() {
-		fail("Not yet implemented");
+		ClassExpression i = vertexMap.get("i");
+		assertEquals(afterBypassAllTaxonomy, initialTaxonomy.bypass_parents(i, initialTaxonomy.parentsOf(i)));
 	}
 
 }
