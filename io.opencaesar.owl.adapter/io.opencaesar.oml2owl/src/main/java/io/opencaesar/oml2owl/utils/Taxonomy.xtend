@@ -52,7 +52,10 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	}
 	
 	def Set<ClassExpression> directChildrenOf(ClassExpression v) {
-		childrenOf(v).stream.filter[c | !descendantsOf(v).contains(c)].collect(Collectors.toSet)
+		val Set<ClassExpression> c = childrenOf(v)
+		val HashSet<ClassExpression> cd = new HashSet<ClassExpression>
+		c.forEach[ e | cd.addAll(descendantsOf(e))]
+		c.stream.filter[e | !cd.contains(e)].collect(Collectors.toSet)
 	}
 	
 	def Set<ClassExpression> parentsOf(ClassExpression v) {

@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -121,7 +120,9 @@ public class TestAsymmetricTaxonomy {
 
 	@Test
 	public void testDirectChildrenOf() {
-		fail("Not yet implemented");
+		Set<ClassExpression> bc = Stream.of("b", "c")
+				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
+		assertEquals(bc, initialTaxonomy.directChildrenOf(vertexMap.get("a")));
 	}
 
 	@Test
