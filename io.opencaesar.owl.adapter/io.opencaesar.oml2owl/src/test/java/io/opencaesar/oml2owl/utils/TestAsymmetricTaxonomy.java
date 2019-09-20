@@ -26,6 +26,7 @@ public class TestAsymmetricTaxonomy {
 	Taxonomy afterReduceTaxonomy;
 	Taxonomy afterIsolateOneTaxonomy;
 	Taxonomy afterIsolateAllTaxonomy;
+	Taxonomy afterTreeifyTaxonomy;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -50,7 +51,9 @@ public class TestAsymmetricTaxonomy {
 				"c", "i",
 				"e", "h",
 				"e", "i",
-				"i", "j"
+				"f", "k",
+				"i", "j",
+				"j", "k"
 				).collect(Collectors.toList());
 		
 		Set<String> initialVertexNames = initialEdgeSpec.stream().collect(Collectors.toSet());
@@ -74,7 +77,9 @@ public class TestAsymmetricTaxonomy {
 				"a", "i",
 				"e", "h",
 				"e", "i",
-				"i", "j"
+				"f", "k",
+				"i", "j",
+				"j", "k"
 				).collect(Collectors.toList());
 
 		List<ClassExpression> afterBypassOneEdgeList = afterBypassOneEdgeSpec.stream()
@@ -94,7 +99,9 @@ public class TestAsymmetricTaxonomy {
 				"c", "f",
 				"c", "g",
 				"e", "h",
-				"i", "j"
+				"f", "k",
+				"i", "j",
+				"j", "k"
 				).collect(Collectors.toList());
 
 		List<ClassExpression> afterBypassAllEdgeList = afterBypassAllEdgeSpec.stream()
@@ -112,7 +119,9 @@ public class TestAsymmetricTaxonomy {
 				"c", "f",
 				"c", "g",
 				"e", "h",
-				"i", "j"
+				"f", "k",
+				"i", "j",
+				"j", "k"
 				).collect(Collectors.toList());
 
 		List<ClassExpression> afterReduceEdgeList = afterReduceEdgeSpec.stream()
@@ -129,7 +138,9 @@ public class TestAsymmetricTaxonomy {
 				"c\\i", "f",
 				"c\\i", "g",
 				"e", "h",
-				"i", "j"
+				"f", "k",
+				"i", "j",
+				"j", "k"
 				).collect(Collectors.toList());
 
 		vertexMap.put("c\\i", vertexMap.get("c").difference(vertexMap.get("i")));
@@ -148,7 +159,9 @@ public class TestAsymmetricTaxonomy {
 				"c\\i", "f",
 				"c\\i", "g",
 				"e\\i", "h",
-				"i", "j"
+				"f", "k",
+				"i", "j",
+				"j", "k"
 				).collect(Collectors.toList());
 
 		vertexMap.put("e\\i", vertexMap.get("e").difference(vertexMap.get("i")));
@@ -157,6 +170,29 @@ public class TestAsymmetricTaxonomy {
 				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
 		afterIsolateAllTaxonomy = new Taxonomy(afterIsolateAllEdgeList);
+
+		List<String> afterTreeifyEdgeSpec = Stream.of(
+				"a", "b",
+				"a", "c\\(i∪k)",
+				"b", "d",
+				"b", "e\\i",
+				"b", "i\\k",
+				"b", "k",
+				"c\\(i∪k)", "f\\k",
+				"c\\(i∪k)", "g",
+				"e\\i", "h",
+				"i\\k", "j\\k"
+				).collect(Collectors.toList());
+
+		vertexMap.put("c\\(i∪k)", vertexMap.get("c").difference(vertexMap.get("i")).difference(vertexMap.get("k")));
+		vertexMap.put("f\\k", vertexMap.get("f").difference(vertexMap.get("k")));
+		vertexMap.put("i\\k", vertexMap.get("i").difference(vertexMap.get("k")));
+		vertexMap.put("j\\k", vertexMap.get("j").difference(vertexMap.get("k")));
+		
+		List<ClassExpression> afterTreeifyEdgeList = afterTreeifyEdgeSpec.stream()
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
+		
+		afterTreeifyTaxonomy = new Taxonomy(afterTreeifyEdgeList);
 }
 
 	@After
@@ -172,9 +208,9 @@ public class TestAsymmetricTaxonomy {
 
 	@Test
 	public void testDescendantsOf() {
-		Set<ClassExpression> bcdefghij = Stream.of("b", "c", "d", "e", "f", "g", "h", "i", "j")
+		Set<ClassExpression> bcdefghijk = Stream.of("b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
 				.map(vn -> vertexMap.get(vn)).collect(Collectors.toSet());
-		assertEquals(bcdefghij, initialTaxonomy.descendantsOf(vertexMap.get("a")));
+		assertEquals(bcdefghijk, initialTaxonomy.descendantsOf(vertexMap.get("a")));
 	}
 
 	@Test
@@ -226,7 +262,7 @@ public class TestAsymmetricTaxonomy {
 	}
 
 	@Test
-	public void testReduce_child() {
+	public void testReduceChild() {
 		ClassExpression i = vertexMap.get("i");
 		assertEquals(afterReduceTaxonomy, afterBypassAllTaxonomy.reduceChild(i));
 	}
@@ -246,7 +282,7 @@ public class TestAsymmetricTaxonomy {
 
 	@Test
 	public void testTreeify() {
-		assertEquals(afterIsolateAllTaxonomy, initialTaxonomy.treeify());
+		assertEquals(afterTreeifyTaxonomy, initialTaxonomy.treeify());
 	}
 
 }
