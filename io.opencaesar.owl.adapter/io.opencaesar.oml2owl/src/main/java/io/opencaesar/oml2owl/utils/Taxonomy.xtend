@@ -125,4 +125,71 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		
 	}
 	
+	/**
+	 * Eliminate redundant edges above child.
+	 * 
+	 * @param child ClassExpression
+	 * @return Taxonomy
+	 */
+	def Taxonomy reduce_child(ClassExpression child) {
+		
+		val Taxonomy g = new Taxonomy
+		
+		// Copy all vertices.
+		
+		vertexSet.forEach[ClassExpression v | g.addVertex(v)]
+		
+		// Copy all edges to child.
+		
+		edgeSet.stream.map[TaxonomyEdge e | Tuples.pair(e.getEdgeSource, e.getEdgeTarget)]
+			.filter[getSecond != child]
+			.forEach[p | g.addEdge(p.getFirst, p.getSecond)]
+			
+		// Eliminate redundant edges above child.
+		
+		directParentsOf(child).forEach[ClassExpression p | g.addEdge(p, child)]
+		
+		g
+		
+	}
+	
+	/**
+	 * Isolate child from one parent.
+	 * 
+	 * @param child ClassExpression
+	 * @param parent ClassExpression
+	 * @return Taxonomy
+	 * 
+	 */
+	def isolateChild(ClassExpression child, ClassExpression parent) {
+		if (parentsOf(parent).isEmpty) {
+			this
+		} else {
+			val Taxonomy g = new Taxonomy
+			
+			val ClassExpression diff = parent.difference(child)
+			
+			val HashSet<ClassExpression> newVertices = new HashSet<ClassExpression>
+			newVertices.addAll(vertexSet)
+			newVertices.remove(parent)
+			newVertices.add(diff)
+			newVertices.forEach[ClassExpression e | g.addVertex(e)]
+			
+			edgeSet.forEach[TaxonomyEdge e |
+				val s = getEdgeSource(e)
+				val t = getEdgeTarget(e)
+				switch e {
+					case s == parent:
+						if (t != child) g.addEdge(diff, t)
+					case t == parent:
+						g.addEdge(s, diff)
+					default:
+						g.addEdge(s, t)
+				}
+			]
+			
+			g
+		}
+			
+	}
 }
