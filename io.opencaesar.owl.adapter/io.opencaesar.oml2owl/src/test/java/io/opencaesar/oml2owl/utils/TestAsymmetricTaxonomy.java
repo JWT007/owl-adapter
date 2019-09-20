@@ -213,16 +213,16 @@ public class TestAsymmetricTaxonomy {
 	}
 
 	@Test
-	public void testBypass_parent() {
+	public void testBypassParent() {
 		ClassExpression c = vertexMap.get("c");
 		ClassExpression i = vertexMap.get("i");
-		assertEquals(afterBypassOneTaxonomy, initialTaxonomy.bypass_parent(i, c));
+		assertEquals(afterBypassOneTaxonomy, initialTaxonomy.bypassParent(i, c));
 	}
 
 	@Test
-	public void testBypass_parents() {
+	public void testBypassParents() {
 		ClassExpression i = vertexMap.get("i");
-		assertEquals(afterBypassAllTaxonomy, initialTaxonomy.bypass_parents(i, initialTaxonomy.parentsOf(i)));
+		assertEquals(afterBypassAllTaxonomy, initialTaxonomy.bypassParents(i, initialTaxonomy.parentsOf(i)));
 	}
 
 	@Test

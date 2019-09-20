@@ -84,7 +84,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 * @param	parent ClassExpression
 	 * @return Taxonomy
 	 */
-	def Taxonomy bypass_parent(ClassExpression child, ClassExpression parent) {
+	def Taxonomy bypassParent(ClassExpression child, ClassExpression parent) {
 		
 		val Taxonomy g = new Taxonomy
 		
@@ -112,7 +112,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 * @param	parents Set<ClassExpression>
 	 * @return Taxonomy
 	 */
-	def Taxonomy bypass_parents(ClassExpression child, Set<ClassExpression> parents) {
+	def Taxonomy bypassParents(ClassExpression child, Set<ClassExpression> parents) {
 		
 		if (parents.isEmpty)
 			this
@@ -120,7 +120,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 			val pl = parents.toList
 			val first = pl.get(0)
 			val rest = pl.drop(1).toSet
-			bypass_parent(child, first).bypass_parents(child, rest)
+			bypassParent(child, first).bypassParents(child, rest)
 		}
 		
 	}
