@@ -131,7 +131,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 * @param child ClassExpression
 	 * @return Taxonomy
 	 */
-	def Taxonomy reduce_child(ClassExpression child) {
+	def Taxonomy reduceChild(ClassExpression child) {
 		
 		val Taxonomy g = new Taxonomy
 		
@@ -211,4 +211,25 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		}
 		
 	}
+	
+	/**
+	 * Recursively bypass, reduce, and isolate until the result is a tree.
+	 * 
+	 * @return Taxonomy
+	 * 
+	 */
+	 def Taxonomy treeify() {
+	 	
+	 	val co = multiParentChild
+	 	
+	 	if (co.isPresent) {
+	 		val child = co.get
+	 		val parents = parentsOf(child)
+	 		val bp = bypassParents(child, parents)
+	 		val rd = bp.reduceChild(child)
+	 		rd.isolateChild(child, parents).treeify
+	 	} else {
+	 		this
+	 	}
+	 }
 }

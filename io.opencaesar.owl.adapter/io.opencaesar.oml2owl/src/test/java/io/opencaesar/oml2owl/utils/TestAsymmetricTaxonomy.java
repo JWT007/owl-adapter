@@ -228,7 +228,7 @@ public class TestAsymmetricTaxonomy {
 	@Test
 	public void testReduce_child() {
 		ClassExpression i = vertexMap.get("i");
-		assertEquals(afterReduceTaxonomy, afterBypassAllTaxonomy.reduce_child(i));
+		assertEquals(afterReduceTaxonomy, afterBypassAllTaxonomy.reduceChild(i));
 	}
 
 	@Test
@@ -242,6 +242,11 @@ public class TestAsymmetricTaxonomy {
 	public void testIsolateChild() {
 		ClassExpression i = vertexMap.get("i");
 		assertEquals(afterIsolateAllTaxonomy, afterReduceTaxonomy.isolateChild(i, initialTaxonomy.parentsOf(i)));
+	}
+
+	@Test
+	public void testTreeify() {
+		assertEquals(afterIsolateAllTaxonomy, initialTaxonomy.treeify());
 	}
 
 }
