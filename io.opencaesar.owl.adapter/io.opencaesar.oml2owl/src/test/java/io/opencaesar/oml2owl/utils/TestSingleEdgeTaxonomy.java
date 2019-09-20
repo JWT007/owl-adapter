@@ -44,25 +44,37 @@ public class TestSingleEdgeTaxonomy {
 	}
 
 	@Test
-	public void childrenOf() {
+	public void testChildrenOf() {
 		assertEquals(setB, t.childrenOf(a));
 		assert(t.childrenOf(b).isEmpty());
 	}
 	
 	@Test
-	public void descendantsOf() {
+	public void testDirectChildrenOf() {
+		assertEquals(setB, t.directChildrenOf(a));
+		assert(t.directChildrenOf(b).isEmpty());
+	}
+	
+	@Test
+	public void testDescendantsOf() {
 		assertEquals(setB, t.descendantsOf(a));
 		assert(t.descendantsOf(b).isEmpty());
 	}
 	
 	@Test
-	public void parentsOf() {
+	public void testParentsOf() {
 		assertEquals(setA, t.parentsOf(b));
 		assert(t.parentsOf(a).isEmpty());
 	}
 	
 	@Test
-	public void ancestorsOf() {
+	public void testDirectParentsOf() {
+		assertEquals(setA, t.directParentsOf(b));
+		assert(t.directParentsOf(a).isEmpty());
+	}
+	
+	@Test
+	public void testAncestorsOf() {
 		assertEquals(setA, t.ancestorsOf(b));
 		assert(t.ancestorsOf(a).isEmpty());
 	}
@@ -70,6 +82,11 @@ public class TestSingleEdgeTaxonomy {
 	@Test
 	public void testMultiParentChild() {
 		assertFalse(t.multiParentChild().isPresent());
+	}
+
+	@Test
+	public void testTreeify() {
+		assertEquals(t, t.treeify());
 	}
 
 }

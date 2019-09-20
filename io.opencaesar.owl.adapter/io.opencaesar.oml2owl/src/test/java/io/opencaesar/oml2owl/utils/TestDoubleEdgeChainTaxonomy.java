@@ -54,28 +54,42 @@ public class TestDoubleEdgeChainTaxonomy {
 	}
 
 	@Test
-	public void childrenOf() {
+	public void testChildrenOf() {
 		assertEquals(setB, t.childrenOf(a));
 		assertEquals(setC, t.childrenOf(b));
 		assertTrue(t.childrenOf(c).isEmpty());
 	}
 	
 	@Test
-	public void descendantsOf() {
+	public void testDirectChildrenOf() {
+		assertEquals(setB, t.directChildrenOf(a));
+		assertEquals(setC, t.directChildrenOf(b));
+		assertTrue(t.directChildrenOf(c).isEmpty());
+	}
+	
+	@Test
+	public void testDescendantsOf() {
 		assertEquals(setBC, t.descendantsOf(a));
 		assertEquals(setC, t.descendantsOf(b));
 		assertTrue(t.descendantsOf(c).isEmpty());
 	}
 	
 	@Test
-	public void parentsOf() {
+	public void testParentsOf() {
 		assert(t.parentsOf(a).isEmpty());
 		assertEquals(setA, t.parentsOf(b));
 		assertEquals(setB, t.parentsOf(c));
 	}
 	
 	@Test
-	public void ancestorsOf() {
+	public void testDirectParentsOf() {
+		assert(t.directParentsOf(a).isEmpty());
+		assertEquals(setA, t.directParentsOf(b));
+		assertEquals(setB, t.directParentsOf(c));
+	}
+	
+	@Test
+	public void testAncestorsOf() {
 		assert(t.ancestorsOf(a).isEmpty());
 		assertEquals(setA, t.ancestorsOf(b));
 		assertEquals(setAB, t.ancestorsOf(c));
@@ -84,6 +98,11 @@ public class TestDoubleEdgeChainTaxonomy {
 	@Test
 	public void testMultiParentChild() {
 		assertFalse(t.multiParentChild().isPresent());
+	}
+
+	@Test
+	public void testTreeify() {
+		assertEquals(t, t.treeify());
 	}
 
 }

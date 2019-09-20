@@ -34,4 +34,9 @@ public class TestEmptyTaxonomy {
 		assertFalse(t.multiParentChild().isPresent());
 	}
 
+	@Test
+	public void testTreeify() {
+		assertEquals(t, t.treeify());
+	}
+
 }

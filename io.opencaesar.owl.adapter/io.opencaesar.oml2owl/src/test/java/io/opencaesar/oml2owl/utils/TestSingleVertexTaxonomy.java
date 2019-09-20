@@ -33,28 +33,42 @@ public class TestSingleVertexTaxonomy {
 	}
 
 	@Test
-	public void childrenOf() {
+	public void testChildrenOf() {
 		assert(t.childrenOf(a).isEmpty());
 	}
 	
+	public void testDirectChildrenOf() {
+		assert(t.directChildrenOf(a).isEmpty());
+	}
+	
 	@Test
-	public void descendantsOf() {
+	public void testDescendantsOf() {
 		assert(t.descendantsOf(a).isEmpty());
 	}
 	
 	@Test
-	public void parentsOf() {
+	public void testParentsOf() {
 		assert(t.parentsOf(a).isEmpty());
 	}
 	
 	@Test
-	public void ancestorsOf() {
+	public void testDirectParentsOf() {
+		assert(t.directParentsOf(a).isEmpty());
+	}
+	
+	@Test
+	public void testAncestorsOf() {
 		assert(t.ancestorsOf(a).isEmpty());
 	}
 	
 	@Test
 	public void testMultiParentChild() {
 		assertFalse(t.multiParentChild().isPresent());
+	}
+
+	@Test
+	public void testTreeify() {
+		assertEquals(t, t.treeify());
 	}
 
 }
