@@ -1,8 +1,10 @@
 package io.opencaesar.oml2owl.utils
 
 import java.util.Optional
+import java.util.HashSet
 import java.util.Set
 import java.util.Map
+import java.util.List
 import java.util.stream.Collectors
 
 import org.eclipse.xtext.util.Tuples
@@ -16,12 +18,17 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, DefaultEdge> {
 		super(DefaultEdge)
 	}
 	
-	new(Map<ClassExpression, ClassExpression> edgeMap) {
+	new(List<ClassExpression> edgeList) {
 		super(DefaultEdge)
-		val Set<ClassExpression> vertexSet = edgeMap.keySet
-		vertexSet.addAll(edgeMap.values)
+		val HashSet<ClassExpression> vertexSet = new HashSet<ClassExpression>
+		vertexSet.addAll(edgeList)
 		vertexSet.forEach[ v | addVertex(v)]
-		edgeMap.forEach[ p, c | addEdge(p, c) ]
+		val i = edgeList.iterator
+		while (i.hasNext) {
+			val p = i.next
+			val c = i.next
+			addEdge(p, c)
+		}
 	}
 	
 	def Set<ClassExpression> childrenOf(ClassExpression v) {

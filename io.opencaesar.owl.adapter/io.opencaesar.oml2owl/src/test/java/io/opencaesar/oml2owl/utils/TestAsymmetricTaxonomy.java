@@ -21,6 +21,8 @@ public class TestAsymmetricTaxonomy {
 	HashMap<String, ClassExpression> initialVertexMap = new HashMap<String, ClassExpression>();
 	Taxonomy initialTaxonomy;
 	
+	Taxonomy afterBypassTaxonomy;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -32,7 +34,7 @@ public class TestAsymmetricTaxonomy {
 	@Before
 	public void setUp() throws Exception {
 		
-		List<String> initialEdges = Stream.of(
+		List<String> initialEdgeSpec = Stream.of(
 				"a", "b",
 				"a", "c",
 				"b", "d",
@@ -44,17 +46,17 @@ public class TestAsymmetricTaxonomy {
 				"e", "i",
 				"i", "j"
 				).collect(Collectors.toList());
-		Set<String> initialVertexNames = initialEdges.stream().collect(Collectors.toSet());
-		HashMap<String, ClassExpression> initialVertexMap = new HashMap<String, ClassExpression>();
-		initialVertexNames.forEach((String vn) -> { initialVertexMap.put(vn, new Singleton(vn)); } );
-		HashMap<ClassExpression, ClassExpression> initialEdgeMap = new HashMap<ClassExpression, ClassExpression>();
-		int i;
-		for (i = 0; i < initialEdges.size() / 2; i += 2) {
-			initialEdgeMap.put(initialVertexMap.get(initialEdges.get(i)), initialVertexMap.get(initialEdges.get(i + 1)));
-		}
-		initialTaxonomy = new Taxonomy(initialEdgeMap);
 		
-		List<String> afterBypassEdges = Stream.of(
+		Set<String> initialVertexNames = initialEdgeSpec.stream().collect(Collectors.toSet());
+		
+		initialVertexNames.forEach((String vn) -> { initialVertexMap.put(vn, new Singleton(vn)); } );
+		
+		List<ClassExpression> initialEdgeList = initialEdgeSpec.stream()
+				.map((String e) -> initialVertexMap.get(e)).collect(Collectors.toList());
+		
+		initialTaxonomy = new Taxonomy(initialEdgeList);
+		
+		List<String> afterBypassEdgeSpec = Stream.of(
 				"a", "b",
 				"a", "c",
 				"a", "i",
@@ -66,7 +68,11 @@ public class TestAsymmetricTaxonomy {
 				"e", "h",
 				"i", "j"
 				).collect(Collectors.toList());
-		Set<String> afterBypassVertexNames = afterBypassEdges.stream().collect(Collectors.toSet());
+
+		List<ClassExpression> afterBypassEdgeList = afterBypassEdgeSpec.stream()
+				.map((String e) -> initialVertexMap.get(e)).collect(Collectors.toList());
+		
+		afterBypassTaxonomy = new Taxonomy(afterBypassEdgeList);
 }
 
 	@After
