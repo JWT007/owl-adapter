@@ -234,6 +234,13 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 	}
 	}
 	
+	/**
+	 * Produce a map from each parent ClassExpression to its children
+	 * (if more than one).
+	 * 
+	 * @return HashMap<ClassExpression, Set<ClassExpression>>
+	 *
+	 */
 	def HashMap<ClassExpression, Set<ClassExpression>> siblingMap() {
 		val HashMap<ClassExpression, Set<ClassExpression>> map = new HashMap
 		vertexSet.forEach[ p |
