@@ -1,6 +1,7 @@
 package io.opencaesar.oml2owl.utils
 
 import java.util.Optional
+import java.util.HashMap
 import java.util.HashSet
 import java.util.Set
 import java.util.List
@@ -231,5 +232,16 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 	} else {
 	 		this
 	 	}
+	}
+	
+	def HashMap<ClassExpression, Set<ClassExpression>> siblingMap() {
+		val HashMap<ClassExpression, Set<ClassExpression>> map = new HashMap
+		vertexSet.forEach[ p |
+			val Set<ClassExpression> cl = edgesOf(p).stream
+				.filter[e1 | getEdgeSource(e1) == p]
+				.map[e2 | getEdgeTarget(e2)].collect(Collectors.toSet)
+			if (cl.size > 1) map.put(p, cl)
+		]
+		map
 	}
 }

@@ -28,6 +28,8 @@ public class TestAsymmetricTaxonomy {
 	Taxonomy afterIsolateAllTaxonomy;
 	Taxonomy afterTreeifyTaxonomy;
 
+	HashMap<ClassExpression, Set<ClassExpression>> siblingMap = new HashMap<ClassExpression, Set<ClassExpression>>();
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -193,7 +195,12 @@ public class TestAsymmetricTaxonomy {
 				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
 		afterTreeifyTaxonomy = new Taxonomy(afterTreeifyEdgeList);
+		
+		siblingMap.put(vertexMap.get("a"), Stream.of("b", "c\\(i∪k)").map(s -> vertexMap.get(s)).collect(Collectors.toSet()));
+		siblingMap.put(vertexMap.get("b"), Stream.of("d", "e\\i", "i\\k", "k").map(s -> vertexMap.get(s)).collect(Collectors.toSet()));
+		siblingMap.put(vertexMap.get("c\\(i∪k)"), Stream.of("f\\k", "g").map(s -> vertexMap.get(s)).collect(Collectors.toSet()));
 }
+		
 
 	@After
 	public void tearDown() throws Exception {
@@ -283,6 +290,11 @@ public class TestAsymmetricTaxonomy {
 	@Test
 	public void testTreeify() {
 		assertEquals(afterTreeifyTaxonomy, initialTaxonomy.treeify());
+	}
+
+	@Test
+	public void testSiblingMap() {
+		assertEquals(siblingMap, afterTreeifyTaxonomy.siblingMap());
 	}
 
 }
