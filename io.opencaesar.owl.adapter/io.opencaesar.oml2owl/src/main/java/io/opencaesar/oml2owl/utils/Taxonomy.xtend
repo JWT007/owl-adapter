@@ -105,7 +105,7 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		g
 	}
 	
-	/*
+	/**
 	 * Recursively bypass parents of a child.
 	 * 
 	 * @param	child ClassExpression
@@ -192,7 +192,8 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		}
 			
 	}
-	/*
+	
+	/**
 	 * Recursively isolate child from parents.
 	 * 
 	 * @param	child ClassExpression
@@ -209,7 +210,6 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 			val rest = pl.drop(1).toSet
 			isolateChildFromOne(child, first).isolateChild(child, rest)
 		}
-		
 	}
 	
 	/**
@@ -231,5 +231,5 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	 	} else {
 	 		this
 	 	}
-	 }
+	}
 }
