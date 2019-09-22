@@ -11,6 +11,7 @@ import org.eclipse.xtext.util.Tuples
 
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.DirectedAcyclicGraph
+import org.jgrapht.alg.TransitiveReduction
 
 class TaxonomyEdge extends DefaultEdge {
 	
@@ -76,6 +77,14 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	
 	def Optional<ClassExpression> multiParentChild() {
 		vertexSet.stream.filter[parentsOf.length > 1].findFirst
+	}
+	
+	def Taxonomy transitiveReduction() {
+		
+		val Taxonomy tr = clone as Taxonomy
+		
+		TransitiveReduction.INSTANCE.reduce(tr)
+		tr
 	}
 	
 	/**

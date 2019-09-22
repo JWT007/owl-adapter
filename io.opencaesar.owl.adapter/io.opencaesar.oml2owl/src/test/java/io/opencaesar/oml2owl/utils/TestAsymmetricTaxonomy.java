@@ -20,7 +20,7 @@ public class TestAsymmetricTaxonomy {
 	
 	HashMap<String, ClassExpression> vertexMap = new HashMap<String, ClassExpression>();
 	Taxonomy initialTaxonomy;
-	
+	Taxonomy redundantEdgeTaxonomy;	
 	Taxonomy afterBypassOneTaxonomy;
 	Taxonomy afterBypassAllTaxonomy;
 	Taxonomy afterReduceTaxonomy;
@@ -66,6 +66,34 @@ public class TestAsymmetricTaxonomy {
 				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
 		initialTaxonomy = new Taxonomy(initialEdgeList);
+		
+		//  Redundant edges.
+		
+		List<String> redundantEdgeSpec = Stream.of(
+				"a", "d",
+				"a", "e",
+				"a", "f",
+				"a", "g",
+				"a", "h",
+				"a", "i",
+				"a", "j",
+				"a", "k",
+				"b", "h",
+				"b", "i",
+				"b", "j",
+				"c", "j",
+				"b", "k",
+				"c", "k",
+				"e", "j",
+				"e", "k",
+				"i", "k"
+				).collect(Collectors.toList());
+		
+		List<ClassExpression> redundantEdgeList = redundantEdgeSpec.stream()
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
+		redundantEdgeList.addAll(initialEdgeList);
+		
+		redundantEdgeTaxonomy = new Taxonomy(redundantEdgeList);
 		
 		// After bypass(i, c)
 		
@@ -253,6 +281,11 @@ public class TestAsymmetricTaxonomy {
 		Optional<ClassExpression> childOption = initialTaxonomy.multiParentChild();
 		assertTrue(childOption.isPresent());
 		assertEquals(vertexMap.get("i"), childOption.get());
+	}
+
+	@Test
+	public void testTransitiveReduction() {
+		assertEquals(initialTaxonomy, redundantEdgeTaxonomy.transitiveReduction());
 	}
 
 	@Test

@@ -101,6 +101,14 @@ public class TestDoubleEdgeChainTaxonomy {
 	}
 
 	@Test
+	public void testTransitiveReduction() {
+		Taxonomy t1 = (Taxonomy) t.clone();
+		assertEquals(t, t.transitiveReduction());
+		t1.addEdge(a, c);
+		assertEquals(t, t1.transitiveReduction());
+	}
+
+	@Test
 	public void testTreeify() {
 		assertEquals(t, t.treeify());
 	}
