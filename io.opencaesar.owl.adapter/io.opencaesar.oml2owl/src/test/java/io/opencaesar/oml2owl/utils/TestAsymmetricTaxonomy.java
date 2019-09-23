@@ -23,6 +23,7 @@ public class TestAsymmetricTaxonomy {
 	Taxonomy redundantEdgeTaxonomy;
 	Taxonomy afterExciseVertexTaxonomy;
 	Taxonomy afterExciseVerticesTaxonomy;
+	Taxonomy unrootedTaxonomy;
 	Taxonomy afterBypassOneTaxonomy;
 	Taxonomy afterBypassAllTaxonomy;
 	Taxonomy afterReduceTaxonomy;
@@ -132,6 +133,21 @@ public class TestAsymmetricTaxonomy {
 				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
 		
 		afterExciseVerticesTaxonomy = new Taxonomy(afterExciseVerticesEdgeList);
+		
+		// After exciseVertices({b, d, e, f, g})
+		
+		List<String> unrootedEdgeSpec = Stream.of(
+				"c", "f",
+				"c", "i",
+				"f", "k",
+				"i", "j",
+				"j", "k"
+				).collect(Collectors.toList());
+		
+		List<ClassExpression> unrootedEdgeList = unrootedEdgeSpec.stream()
+				.map((String e) -> vertexMap.get(e)).collect(Collectors.toList());
+		
+		unrootedTaxonomy = new Taxonomy(unrootedEdgeList);
 		
 		// After bypass(i, c)
 		
@@ -336,6 +352,11 @@ public class TestAsymmetricTaxonomy {
 	public void testExciseVerticesIf() {
 		Set<ClassExpression> exciseSet = Stream.of("a", "b", "d", "e", "g", "h").map(s -> vertexMap.get(s)).collect(Collectors.toSet());
 		assertEquals(afterExciseVerticesTaxonomy, initialTaxonomy.exciseVerticesIf(v -> exciseSet.contains(v)));
+	}
+
+	@Test
+	public void testRootAt() {
+		assertEquals(initialTaxonomy, unrootedTaxonomy.rootAt(vertexMap.get("a")));
 	}
 
 	@Test

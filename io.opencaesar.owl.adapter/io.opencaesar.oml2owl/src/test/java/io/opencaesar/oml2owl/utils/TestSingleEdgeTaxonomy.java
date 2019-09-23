@@ -13,7 +13,8 @@ import org.junit.Test;
 
 public class TestSingleEdgeTaxonomy {
 
-	Taxonomy t;
+	Taxonomy tAB;
+	Taxonomy tB;
 	Singleton a;
 	Singleton b;
 	HashSet<ClassExpression> setA;
@@ -29,14 +30,16 @@ public class TestSingleEdgeTaxonomy {
 
 	@Before
 	public void setUp() throws Exception {
-		t = new Taxonomy();
+		tAB = new Taxonomy();
+		tB = new Taxonomy();
 		a = new Singleton("a");
 		b = new Singleton("b");
 		setA = new HashSet<ClassExpression>(Arrays.asList(a));
 		setB = new HashSet<ClassExpression>(Arrays.asList(b));
-		t.addVertex(a);
-		t.addVertex(b);
-		t.addEdge(a,  b);
+		tAB.addVertex(a);
+		tAB.addVertex(b);
+		tAB.addEdge(a, b);
+		tB.addVertex(b);
 	}
 
 	@After
@@ -45,48 +48,68 @@ public class TestSingleEdgeTaxonomy {
 
 	@Test
 	public void testChildrenOf() {
-		assertEquals(setB, t.childrenOf(a));
-		assert(t.childrenOf(b).isEmpty());
+		assertEquals(setB, tAB.childrenOf(a));
+		assert(tAB.childrenOf(b).isEmpty());
 	}
 	
 	@Test
 	public void testDirectChildrenOf() {
-		assertEquals(setB, t.directChildrenOf(a));
-		assert(t.directChildrenOf(b).isEmpty());
+		assertEquals(setB, tAB.directChildrenOf(a));
+		assert(tAB.directChildrenOf(b).isEmpty());
 	}
 	
 	@Test
 	public void testDescendantsOf() {
-		assertEquals(setB, t.descendantsOf(a));
-		assert(t.descendantsOf(b).isEmpty());
+		assertEquals(setB, tAB.descendantsOf(a));
+		assert(tAB.descendantsOf(b).isEmpty());
 	}
 	
 	@Test
 	public void testParentsOf() {
-		assertEquals(setA, t.parentsOf(b));
-		assert(t.parentsOf(a).isEmpty());
+		assertEquals(setA, tAB.parentsOf(b));
+		assert(tAB.parentsOf(a).isEmpty());
 	}
 	
 	@Test
 	public void testDirectParentsOf() {
-		assertEquals(setA, t.directParentsOf(b));
-		assert(t.directParentsOf(a).isEmpty());
+		assertEquals(setA, tAB.directParentsOf(b));
+		assert(tAB.directParentsOf(a).isEmpty());
 	}
 	
 	@Test
 	public void testAncestorsOf() {
-		assertEquals(setA, t.ancestorsOf(b));
-		assert(t.ancestorsOf(a).isEmpty());
+		assertEquals(setA, tAB.ancestorsOf(b));
+		assert(tAB.ancestorsOf(a).isEmpty());
 	}
 	
 	@Test
+	public void testExciseVertex() {
+		assertEquals(tB, tAB.exciseVertex(a));
+	}
+
+	@Test
+	public void testExciseVertices() {
+		assertEquals(tB, tAB.exciseVertices(setA));
+	}
+
+	@Test
+	public void testExciseVerticesIf() {
+		assertEquals(tB, tAB.exciseVerticesIf(v -> v == a));
+	}
+
+	@Test
+	public void testRootAt() {
+		assertEquals(tAB, tB.rootAt(a));
+	}
+
+	@Test
 	public void testMultiParentChild() {
-		assertFalse(t.multiParentChild().isPresent());
+		assertFalse(tAB.multiParentChild().isPresent());
 	}
 
 	@Test
 	public void testTreeify() {
-		assertEquals(t, t.treeify());
+		assertEquals(tAB, tAB.treeify());
 	}
 
 }

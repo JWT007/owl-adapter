@@ -18,6 +18,7 @@ public class TestDoubleEdgeChainTaxonomy {
 	Taxonomy taxonomyAC;
 	Taxonomy taxonomyAB;
 	Taxonomy taxonomyA;
+	Taxonomy taxonomyC;
 	Singleton a;
 	Singleton b;
 	Singleton c;
@@ -42,6 +43,7 @@ public class TestDoubleEdgeChainTaxonomy {
 		taxonomyAC = new Taxonomy();
 		taxonomyAB = new Taxonomy();
 		taxonomyA = new Taxonomy();
+		taxonomyC = new Taxonomy();
 		a = new Singleton("a");
 		b = new Singleton("b");
 		c = new Singleton("c");
@@ -65,6 +67,7 @@ public class TestDoubleEdgeChainTaxonomy {
 		taxonomyAB.addVertex(b);
 		taxonomyAB.addEdge(a, b);
 		taxonomyA.addVertex(a);
+		taxonomyC.addVertex(c);
 	}
 
 	@After
@@ -133,6 +136,12 @@ public class TestDoubleEdgeChainTaxonomy {
 	@Test
 	public void testExciseVerticesIf() {
 		assertEquals(taxonomyA, taxonomyABC.exciseVerticesIf(v -> setBC.contains(v)));
+	}
+
+	@Test
+	public void testRootAt() {
+		assertEquals(taxonomyABC, taxonomyBC.rootAt(a));
+		assertEquals(taxonomyABC, taxonomyC.rootAt(b).rootAt(a));
 	}
 
 	@Test

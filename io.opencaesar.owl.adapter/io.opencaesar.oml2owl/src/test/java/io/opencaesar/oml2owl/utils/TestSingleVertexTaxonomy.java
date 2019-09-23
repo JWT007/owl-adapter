@@ -2,6 +2,10 @@ package io.opencaesar.oml2owl.utils;
 
 import static org.junit.Assert.*;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -64,8 +68,24 @@ public class TestSingleVertexTaxonomy {
 	}
 	
 	@Test
-	public void testExcise() {
+	public void testExciseVertex() {
 		assertEquals(e, t.exciseVertex(a));
+	}
+
+	@Test
+	public void testExciseVertices() {
+		Set<ClassExpression> setA = Stream.of(a).collect(Collectors.toSet());
+		assertEquals(e, t.exciseVertices(setA));
+	}
+
+	@Test
+	public void testExciseVerticesIf() {
+		assertEquals(e, t.exciseVerticesIf(v -> v == a));
+	}
+
+	@Test
+	public void testRootAt() {
+		assertEquals(t, e.rootAt(a));
 	}
 
 	@Test

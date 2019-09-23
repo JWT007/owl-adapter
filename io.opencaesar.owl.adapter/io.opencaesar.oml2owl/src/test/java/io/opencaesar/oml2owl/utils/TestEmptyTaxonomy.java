@@ -10,7 +10,10 @@ import org.junit.Test;
 
 public class TestEmptyTaxonomy {
 
+	Singleton a;
+	
 	Taxonomy t;
+	Taxonomy tA;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -22,7 +25,10 @@ public class TestEmptyTaxonomy {
 
 	@Before
 	public void setUp() throws Exception {
+		a = new Singleton("a");
 		t = new Taxonomy();
+		tA = new Taxonomy();
+		tA.addVertex(a);
 	}
 
 	@After
@@ -32,6 +38,16 @@ public class TestEmptyTaxonomy {
 	@Test
 	public void testMultiParentChild() {
 		assertFalse(t.multiParentChild().isPresent());
+	}
+
+	@Test
+	public void testExciseVerticesIf() {
+		assertEquals(t, t.exciseVerticesIf(v -> true));
+	}
+
+	@Test
+	public void testRootAt() {
+		assertEquals(tA, t.rootAt(a));
 	}
 
 	@Test

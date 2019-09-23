@@ -130,8 +130,23 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		}
 	}
 	
-	def Taxonomy exciseVerticesIf(Predicate predicate) {
+	def Taxonomy exciseVerticesIf(Predicate<ClassExpression> predicate) {
 		exciseVertices(vertexSet.stream.filter[v | predicate.test(v)].collect(Collectors.toSet))
+	}
+	
+	def Taxonomy rootAt(ClassExpression root) {
+
+		val Taxonomy g = clone as Taxonomy
+
+		g.addVertex(root)
+
+		vertexSet.stream.filter[v |
+			inDegreeOf(v) == 0
+		].forEach[t |
+			g.addEdge(root, t)
+		]
+
+		g
 	}
 	
 	def Taxonomy transitiveReduction() {
