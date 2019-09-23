@@ -118,11 +118,22 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		
 	}
 	
+	def Taxonomy exciseVertices(Set<ClassExpression> vs) {
+		
+		if (vs.isEmpty) {
+			this
+		} else {
+			val vl = vs.toList
+			val first = vl.get(0)
+			val rest = vl.drop(1).toSet
+			exciseVertex(first).exciseVertices(rest)
+		}
+	}
+	
 	def Taxonomy exciseVertexIf(BooleanSupplier predicate) {
 
 		val Taxonomy g = new Taxonomy
 		 
-		
 		g
 	}
 	
