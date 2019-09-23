@@ -5,6 +5,7 @@ import java.util.HashMap
 import java.util.HashSet
 import java.util.Set
 import java.util.List
+import java.util.function.BooleanSupplier
 import java.util.stream.Collectors
 
 import org.eclipse.xtext.util.Tuples
@@ -77,6 +78,52 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 	
 	def Optional<ClassExpression> multiParentChild() {
 		vertexSet.stream.filter[parentsOf.length > 1].findFirst
+	}
+	
+	def Taxonomy exciseVertex(ClassExpression v) {
+
+		val Taxonomy g = new Taxonomy
+		 
+		// Copy all vertices except the specified vertex.
+		
+		vertexSet.stream.filter[ClassExpression e | e != v].forEach[ClassExpression x | g.addVertex(x)]
+
+		// Copy all edges no involving v. Remember parents and children of v.
+		
+		val Set<ClassExpression> parents = new HashSet<ClassExpression>
+		val Set<ClassExpression> children = new HashSet<ClassExpression>
+		
+		edgeSet.forEach[e |
+			val s = getEdgeSource(e)
+			val t = getEdgeTarget(e)
+			switch (e) {
+				case s == v:
+					children.add(t)
+				case t == v:
+					parents.add(s)
+				default:
+					g.addEdge(s, t)				
+			}
+		]
+		
+		// Add edges from parents to children.
+		
+		parents.forEach[p |
+			children.forEach[c |
+				g.addEdge(p, c)
+			]
+		]
+		
+		g
+		
+	}
+	
+	def Taxonomy exciseVertexIf(BooleanSupplier predicate) {
+
+		val Taxonomy g = new Taxonomy
+		 
+		
+		g
 	}
 	
 	def Taxonomy transitiveReduction() {

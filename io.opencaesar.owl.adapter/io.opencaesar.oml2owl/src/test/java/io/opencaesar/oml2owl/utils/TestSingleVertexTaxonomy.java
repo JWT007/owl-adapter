@@ -11,6 +11,7 @@ import org.junit.Test;
 public class TestSingleVertexTaxonomy {
 
 	Taxonomy t;
+	Taxonomy e;
 	Singleton a;
 	
 	@BeforeClass
@@ -24,6 +25,7 @@ public class TestSingleVertexTaxonomy {
 	@Before
 	public void setUp() throws Exception {
 		t = new Taxonomy();
+		e = new Taxonomy();
 		a = new Singleton("a");
 		t.addVertex(a);
 	}
@@ -61,6 +63,11 @@ public class TestSingleVertexTaxonomy {
 		assert(t.ancestorsOf(a).isEmpty());
 	}
 	
+	@Test
+	public void testExcise() {
+		assertEquals(e, t.exciseVertex(a));
+	}
+
 	@Test
 	public void testMultiParentChild() {
 		assertFalse(t.multiParentChild().isPresent());
