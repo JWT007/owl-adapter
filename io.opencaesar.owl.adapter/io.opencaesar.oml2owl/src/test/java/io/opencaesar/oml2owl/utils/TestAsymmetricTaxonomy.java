@@ -137,8 +137,13 @@ public class TestAsymmetricTaxonomy {
 		// After exciseVertices({b, d, e, f, g})
 		
 		List<String> unrootedEdgeSpec = Stream.of(
+				"b", "d",
+				"b", "e",
 				"c", "f",
+				"c", "g",
 				"c", "i",
+				"e", "h",
+				"e", "i",
 				"f", "k",
 				"i", "j",
 				"j", "k"
