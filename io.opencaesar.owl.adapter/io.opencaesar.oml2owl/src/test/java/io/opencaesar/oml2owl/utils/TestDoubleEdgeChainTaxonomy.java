@@ -131,6 +131,11 @@ public class TestDoubleEdgeChainTaxonomy {
 	}
 
 	@Test
+	public void testExciseVerticesIf() {
+		assertEquals(taxonomyA, taxonomyABC.exciseVerticesIf(v -> setBC.contains(v)));
+	}
+
+	@Test
 	public void testTransitiveReduction() {
 		Taxonomy t1 = (Taxonomy) taxonomyABC.clone();
 		assertEquals(taxonomyABC, taxonomyABC.transitiveReduction());

@@ -333,6 +333,12 @@ public class TestAsymmetricTaxonomy {
 	}
 
 	@Test
+	public void testExciseVerticesIf() {
+		Set<ClassExpression> exciseSet = Stream.of("a", "b", "d", "e", "g", "h").map(s -> vertexMap.get(s)).collect(Collectors.toSet());
+		assertEquals(afterExciseVerticesTaxonomy, initialTaxonomy.exciseVerticesIf(v -> exciseSet.contains(v)));
+	}
+
+	@Test
 	public void testTransitiveReduction() {
 		assertEquals(initialTaxonomy, redundantEdgeTaxonomy.transitiveReduction());
 	}

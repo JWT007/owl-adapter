@@ -5,7 +5,7 @@ import java.util.HashMap
 import java.util.HashSet
 import java.util.Set
 import java.util.List
-import java.util.function.BooleanSupplier
+import java.util.function.Predicate
 import java.util.stream.Collectors
 
 import org.eclipse.xtext.util.Tuples
@@ -130,11 +130,8 @@ class Taxonomy extends DirectedAcyclicGraph<ClassExpression, TaxonomyEdge> {
 		}
 	}
 	
-	def Taxonomy exciseVertexIf(BooleanSupplier predicate) {
-
-		val Taxonomy g = new Taxonomy
-		 
-		g
+	def Taxonomy exciseVerticesIf(Predicate predicate) {
+		exciseVertices(vertexSet.stream.filter[v | predicate.test(v)].collect(Collectors.toSet))
 	}
 	
 	def Taxonomy transitiveReduction() {
