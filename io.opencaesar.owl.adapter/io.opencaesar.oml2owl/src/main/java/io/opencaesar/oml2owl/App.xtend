@@ -99,6 +99,11 @@ class App {
 			}
 		}
 		
+		val closeBundle = new CloseBundle(inputResourceSet, ontologyManager)
+		val closureOntology = closeBundle.run
+		val closureOutputFile = new File(outputPath+"WHAT GOES HERE?")
+		outputFiles.put(closureOutputFile, closureOntology)
+		
 		val resourceURL = ClassLoader.getSystemClassLoader().getResource("opencaesar.io/Oml.oml")
 		val resource = inputResourceSet.getResource(URI.createURI(resourceURL.toString), true)
 		val outputFile = new File(outputPath+"/opencaesar.io/Oml.owl2")
