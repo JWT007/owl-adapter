@@ -99,10 +99,12 @@ class App {
 			}
 		}
 		
-		val closeBundle = new CloseBundle(inputResourceSet, ontologyManager)
-		val closureOntology = closeBundle.run
-		val closureOutputFile = new File(outputPath+"WHAT GOES HERE?")
-		outputFiles.put(closureOutputFile, closureOntology)
+		outputFiles.values.filter[true].forEach[ontology |
+			val closeBundle = new CloseBundle(ontology, ontologyManager)
+			val closureOntology = closeBundle.run
+			// need keys to replace ontology with its closure
+		]
+		
 		
 		val resourceURL = ClassLoader.getSystemClassLoader().getResource("opencaesar.io/Oml.oml")
 		val resource = inputResourceSet.getResource(URI.createURI(resourceURL.toString), true)

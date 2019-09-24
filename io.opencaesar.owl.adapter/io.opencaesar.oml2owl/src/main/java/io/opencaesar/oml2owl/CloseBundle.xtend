@@ -1,6 +1,5 @@
 package io.opencaesar.oml2owl
 
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.semanticweb.owlapi.model.OWLOntologyManager
 import org.semanticweb.owlapi.model.OWLOntology
 import io.opencaesar.oml2owl.utils.Taxonomy
@@ -10,15 +9,15 @@ import java.util.Set
 
 class CloseBundle {
 	
-	protected val XtextResourceSet resourceSet
+	protected val OWLOntology ontology
 	protected val OWLOntologyManager ontologyManager
 	
-  	new(XtextResourceSet rs, OWLOntologyManager om) {
-		resourceSet = rs
+  	new(OWLOntology o, OWLOntologyManager om) {
+		ontology = o
 		ontologyManager = om
 	}
 	
-	private def Taxonomy buildTaxonomy(XtextResourceSet resourceSet) {
+	private def Taxonomy buildTaxonomy(OWLOntology ontology) {
 	}
 	
 	private def Taxonomy treeifyTaxonomy(Taxonomy taxonomy) {
@@ -32,7 +31,7 @@ class CloseBundle {
 	
 	def OWLOntology run() {
 		
-		val Taxonomy taxonomy = buildTaxonomy(resourceSet)
+		val Taxonomy taxonomy = buildTaxonomy(ontology)
 		val Taxonomy tree = treeifyTaxonomy(taxonomy)
 		val siblingMap = getSiblingMap(tree)
 		val closure = getClosureOntology(siblingMap, ontologyManager)
