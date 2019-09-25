@@ -87,6 +87,8 @@ class App {
 		val ontologyManager = OWLManager.createOWLOntologyManager()
 		val owl2api = new OwlApi(ontologyManager)
 		val outputFiles = new HashMap
+		
+		val oml2owl = new HashMap
 
 		for (inputFile : inputFiles) {
 			val inputURI = URI.createFileURI(inputFile.absolutePath)
@@ -95,16 +97,15 @@ class App {
 				LOGGER.info("Reading: "+inputURI)
 				var relativePath = outputPath+'/'+inputFolder.toURI().relativize(inputFile.toURI()).getPath()
 				val outputFile = new File(relativePath.substring(0, relativePath.lastIndexOf('.')+1)+'owl2')
-				outputFiles.put(outputFile, new Oml2Owl(inputResource, owl2api).run)
+				val ontology = new Oml2Owl(inputResource, owl2api).run
+				outputFiles.put(outputFile, ontology)
+				oml2owl.put(inputResource, ontology)
 			}
 		}
 		
-		outputFiles.values.filter[true].forEach[ontology |
-			val closeBundle = new CloseBundle(ontology, ontologyManager)
-			val closureOntology = closeBundle.run
-			// need keys to replace ontology with its closure
-		]
-		
+		oml2owl.filter[true].forEach[resource, ontology |
+			new CloseBundle(resource, ontology, ontologyManager).run
+		]		
 		
 		val resourceURL = ClassLoader.getSystemClassLoader().getResource("opencaesar.io/Oml.oml")
 		val resource = inputResourceSet.getResource(URI.createURI(resourceURL.toString), true)

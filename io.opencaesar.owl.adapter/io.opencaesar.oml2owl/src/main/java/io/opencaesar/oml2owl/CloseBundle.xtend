@@ -6,18 +6,21 @@ import io.opencaesar.oml2owl.utils.Taxonomy
 import java.util.HashMap
 import io.opencaesar.oml2owl.utils.ClassExpression
 import java.util.Set
+import org.eclipse.emf.ecore.resource.Resource
 
 class CloseBundle {
 	
+	protected val Resource resource
 	protected val OWLOntology ontology
 	protected val OWLOntologyManager ontologyManager
 	
-  	new(OWLOntology o, OWLOntologyManager om) {
-		ontology = o
-		ontologyManager = om
+  	new(Resource resource, OWLOntology ontology, OWLOntologyManager ontologyManager) {
+		this.resource = resource
+		this.ontology = ontology
+		this.ontologyManager = ontologyManager
 	}
 	
-	private def Taxonomy buildTaxonomy(OWLOntology ontology) {
+	private def Taxonomy buildTaxonomy(Resource resource) {
 	}
 	
 	private def Taxonomy treeifyTaxonomy(Taxonomy taxonomy) {
@@ -26,16 +29,16 @@ class CloseBundle {
 	private def HashMap<ClassExpression, Set<ClassExpression>> getSiblingMap(Taxonomy tree) {		
 	}
 	
-	private def OWLOntology getClosureOntology(HashMap<ClassExpression, Set<ClassExpression>> siblingMap, OWLOntologyManager ontologyManager) {		
+	private def OWLOntology addDisjoints(HashMap<ClassExpression, Set<ClassExpression>> siblingMap, OWLOntology ontology,
+		OWLOntologyManager ontologyManager
+	) {		
 	}
 	
 	def OWLOntology run() {
 		
-		val Taxonomy taxonomy = buildTaxonomy(ontology)
+		val Taxonomy taxonomy = buildTaxonomy(resource)
 		val Taxonomy tree = treeifyTaxonomy(taxonomy)
 		val siblingMap = getSiblingMap(tree)
-		val closure = getClosureOntology(siblingMap, ontologyManager)
-		closure
-		
+		addDisjoints(siblingMap, ontology, ontologyManager)
 	}
 }
