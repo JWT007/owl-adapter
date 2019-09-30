@@ -31,8 +31,8 @@ class CloseBundle {
 			val specializing = axiom.specializingTerm
 			
 			if (!(specialized instanceof Aspect) && !(specializing instanceof Aspect)) {
-				val specializedSingleton = new Singleton(specialized)
-				val specializingSingleton = new Singleton(specializing)
+				val specializedSingleton = new Singleton(specialized.iri)
+				val specializingSingleton = new Singleton(specializing.iri)
 				taxonomy.addVertex(specializedSingleton)
 				taxonomy.addVertex(specializingSingleton)
 				taxonomy.addEdge(specializedSingleton, specializingSingleton)
