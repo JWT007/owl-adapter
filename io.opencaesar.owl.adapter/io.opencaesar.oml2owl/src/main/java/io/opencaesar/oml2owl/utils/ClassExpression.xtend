@@ -298,7 +298,7 @@ class Singleton extends ClassExpression {
  */
 abstract class Unary extends ClassExpression {
 	
-	protected ClassExpression e
+	public ClassExpression e
 	
 	/**
 	 * A Unary involving e
@@ -379,8 +379,8 @@ class Complement extends Unary {
  */
 abstract class Binary extends ClassExpression {
 	
-	protected ClassExpression a
-	protected ClassExpression b
+	public ClassExpression a
+	public ClassExpression b
 	
 	/**
 	 * A Binary involving a and b
@@ -473,7 +473,7 @@ class Difference extends Binary {
  */
 abstract class Nary extends ClassExpression {
 	
-	protected Set<ClassExpression> s
+	public Set<ClassExpression> s
 	
 	/**
 	 * Nary involving s

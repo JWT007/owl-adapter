@@ -104,7 +104,7 @@ class App {
 		}
 		
 		oml2owl.filter[true].forEach[resource, ontology |
-			new CloseBundle(resource, ontology, ontologyManager).run
+			new CloseBundle(resource, ontology, owl2api).run
 		]		
 		
 		val resourceURL = ClassLoader.getSystemClassLoader().getResource("opencaesar.io/Oml.oml")

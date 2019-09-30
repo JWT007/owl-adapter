@@ -15,12 +15,14 @@ import org.semanticweb.owlapi.model.OWLOntology
 import org.semanticweb.owlapi.model.OWLOntologyManager
 import org.semanticweb.owlapi.model.SWRLAtom
 import org.semanticweb.owlapi.vocab.OWLFacet
+import org.semanticweb.owlapi.model.OWLClassExpression
+import java.util.List
 
 class OwlApi {
 	
 	val XSD = "http://www.w3.org/2001/XMLSchema#"
 	val OWLOntologyManager manager
-	val OWLDataFactory factory
+	public val OWLDataFactory factory
 	
 	new(OWLOntologyManager manager) {
 		this.manager = manager
@@ -190,6 +192,12 @@ class OwlApi {
 		return axiom
 	}
 
+	def addDisjointClassesAxiom(OWLOntology ontology, List<OWLClassExpression> classes, OWLAnnotation...annotations) {
+		val axiom = factory.getOWLDisjointClassesAxiom(classes)
+		manager.addAxiom(ontology, axiom)
+		return axiom
+	}
+	
 	def addObjectSomeValuesFrom(OWLOntology ontology, String classIri, String propertyIri, String typeIri, OWLAnnotation...annotations) {
 		val class = factory.getOWLClass(classIri)
 		val property = factory.getOWLObjectProperty(propertyIri)
