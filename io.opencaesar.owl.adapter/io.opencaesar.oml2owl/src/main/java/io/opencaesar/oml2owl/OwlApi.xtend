@@ -1,7 +1,9 @@
 package io.opencaesar.oml2owl
 
+import io.opencaesar.oml2owl.utils.ClassExpression
 import java.math.BigDecimal
 import java.util.Collections
+import java.util.Set
 import org.semanticweb.owlapi.model.AddImport
 import org.semanticweb.owlapi.model.AddOntologyAnnotation
 import org.semanticweb.owlapi.model.IRI
@@ -15,14 +17,14 @@ import org.semanticweb.owlapi.model.OWLOntology
 import org.semanticweb.owlapi.model.OWLOntologyManager
 import org.semanticweb.owlapi.model.SWRLAtom
 import org.semanticweb.owlapi.vocab.OWLFacet
-import org.semanticweb.owlapi.model.OWLClassExpression
-import java.util.List
+
+import static extension io.opencaesar.oml2owl.utils.OwlClassExpression.*
 
 class OwlApi {
 	
 	val XSD = "http://www.w3.org/2001/XMLSchema#"
 	val OWLOntologyManager manager
-	public val OWLDataFactory factory
+	val OWLDataFactory factory
 	
 	new(OWLOntologyManager manager) {
 		this.manager = manager
@@ -192,8 +194,8 @@ class OwlApi {
 		return axiom
 	}
 
-	def addDisjointClassesAxiom(OWLOntology ontology, List<OWLClassExpression> classes, OWLAnnotation...annotations) {
-		val axiom = factory.getOWLDisjointClassesAxiom(classes)
+	def addDisjointClassesAxiom(OWLOntology ontology, Set<ClassExpression> classes, OWLAnnotation...annotations) {
+		val axiom = factory.getOWLDisjointClassesAxiom(classes.map[toOwlClassExpression(factory)])
 		manager.addAxiom(ontology, axiom)
 		return axiom
 	}

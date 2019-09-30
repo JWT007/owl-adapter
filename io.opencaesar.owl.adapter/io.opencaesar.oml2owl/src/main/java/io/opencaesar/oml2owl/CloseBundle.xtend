@@ -8,7 +8,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.semanticweb.owlapi.model.OWLOntology
 
 import static extension io.opencaesar.oml.Oml.*
-import static extension io.opencaesar.oml2owl.utils.OwlClassExpression.*
 
 class CloseBundle {
 	
@@ -47,7 +46,7 @@ class CloseBundle {
 		val Taxonomy taxonomy = omlTaxonomy(resource).rootAt(owlThing).treeify
 		val siblingMap = taxonomy.siblingMap
 		siblingMap.forEach[ k, v |
-			owlApi.addDisjointClassesAxiom(ontology, v.map[toOwlClassExpression(owlApi.factory)].toList)
+			owlApi.addDisjointClassesAxiom(ontology, v)
 		]
 		
 	}
