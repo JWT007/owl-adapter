@@ -11,6 +11,22 @@ import org.semanticweb.owlapi.model.OWLOntology
 
 import static extension io.opencaesar.oml.Oml.*
 import io.opencaesar.oml.Entity
+import org.jgrapht.alg.connectivity.ConnectivityInspector
+import org.jgrapht.GraphType
+import org.jgrapht.graph.AsUndirectedGraph
+import org.jgrapht.GraphTests
+
+class UnconnectedGraphException extends RuntimeException {	
+	new(String s) {
+		super(s)
+	}
+}
+
+class InvalidTreeException extends RuntimeException {	
+	new(String s) {
+		super(s)
+	}
+}
 
 class CloseBundle {
 	
@@ -59,12 +75,24 @@ class CloseBundle {
 	
 	def void run() {
 		
+		val Singleton owlThing = new Singleton("owl:Thing")
+
 		val graph = resource.contents.filter(Graph).findFirst[true]
 		val allGraphs = graph.allImports.map[importedGraph].toList
 		allGraphs.add(graph)
-		val Singleton owlThing = new Singleton("owl:Thing")
-		val Taxonomy taxonomy = omlTaxonomy(allGraphs).rootAt(owlThing).treeify
-		val siblingMap = taxonomy.siblingMap
+		
+		val Taxonomy taxonomy = omlTaxonomy(allGraphs).rootAt(owlThing)
+		if (!(new ConnectivityInspector(taxonomy).isConnected)) {
+			throw (new UnconnectedGraphException("taxonomy is not connected"))
+		}
+		
+		val Taxonomy tree = taxonomy.treeify
+		val ug = new AsUndirectedGraph(tree)
+		if (!(GraphTests.isTree(ug))) {
+			throw (new InvalidTreeException("treeify method returned an invalid tree"))
+		}
+		
+		val siblingMap = tree.siblingMap
 		siblingMap.forEach[ k, v |
 			owlApi.addDisjointClassesAxiom(ontology, v)
 		]
