@@ -1,12 +1,14 @@
 package io.opencaesar.oml2owl.utils
 
-import org.semanticweb.owlapi.model.OWLClass
-import org.semanticweb.owlapi.model.OWLDataFactory
+import io.opencaesar.oml.Entity
+import io.opencaesar.oml.Oml
+import java.util.ArrayList
 import org.semanticweb.owlapi.model.IRI
+import org.semanticweb.owlapi.model.OWLClass
+import org.semanticweb.owlapi.model.OWLClassExpression
+import org.semanticweb.owlapi.model.OWLDataFactory
 import org.semanticweb.owlapi.model.OWLObjectComplementOf
 import org.semanticweb.owlapi.model.OWLObjectIntersectionOf
-import org.semanticweb.owlapi.model.OWLClassExpression
-import java.util.ArrayList
 import org.semanticweb.owlapi.model.OWLObjectUnionOf
 
 class OwlClassExpression {
@@ -20,7 +22,7 @@ class OwlClassExpression {
 	}
 	
 	static dispatch def OWLClass toOwlClassExpression(Singleton s, OWLDataFactory f) {
-		f.getOWLClass(IRI.create(s.toString))
+		f.getOWLClass(IRI.create(Oml.getIri(s.encapsulatedClass as Entity)))
 	}
 	
 	static dispatch def OWLObjectComplementOf toOwlClassExpression(Complement c, OWLDataFactory f) {

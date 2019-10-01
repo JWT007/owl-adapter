@@ -30,8 +30,7 @@ class CloseBundle {
 
 		allGraphs.forEach [ g |
 			g.eAllContents.filter(Entity).forEach [ Entity entity |
-				System.out.println("addVertex(" + entity.toString + ")")
-				taxonomy.addVertex(new Singleton(entity.iri))
+				taxonomy.addVertex(new Singleton(entity))
 			]
 		]
 		
@@ -44,9 +43,8 @@ class CloseBundle {
 					!(specialized instanceof Aspect) &&
 					(specializing instanceof Entity) &&
 					!(specializing instanceof Aspect)) {
-					val specializedSingleton = new Singleton(specialized.iri)
-					val specializingSingleton = new Singleton(specializing.iri)
-					System.out.println("addEdge(" + specializedSingleton.toString + ", " + specializingSingleton + ")")
+					val specializedSingleton = new Singleton(specialized)
+					val specializingSingleton = new Singleton(specializing)
 					taxonomy.addEdge(specializedSingleton, specializingSingleton)
 				}
 			]
