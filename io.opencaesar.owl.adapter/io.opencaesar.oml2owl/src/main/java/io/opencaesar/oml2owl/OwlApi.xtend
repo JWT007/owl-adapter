@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.model.SWRLAtom
 import org.semanticweb.owlapi.vocab.OWLFacet
 
 import static extension io.opencaesar.oml2owl.utils.OwlClassExpression.*
+import org.semanticweb.owlapi.model.OWLClassExpression
 
 class OwlApi {
 	
@@ -195,7 +196,7 @@ class OwlApi {
 	}
 
 	def addDisjointClassesAxiom(OWLOntology ontology, Set<ClassExpression> classes, OWLAnnotation...annotations) {
-		val axiom = factory.getOWLDisjointClassesAxiom(classes.map[toOwlClassExpression(factory)])
+		val axiom = factory.getOWLDisjointClassesAxiom(classes.map[toOwlClassExpression(this)])
 		manager.addAxiom(ontology, axiom)
 		return axiom
 	}
@@ -395,4 +396,27 @@ class OwlApi {
 		return factory.getOWLLiteral(value, datatype)
 	}
 
+	def getOWLThing() {
+		return factory.getOWLThing
+	}
+
+	def getOWLNothing() {
+		return factory.getOWLNothing
+	}
+	
+	def getOWLClass(IRI iri) {
+		return factory.getOWLClass(iri)
+	}
+	
+	def getOWLObjectComplementOf(OWLClassExpression e) {
+		return factory.getOWLObjectComplementOf(e)
+	}
+	
+	def getOWLObjectIntersectionOf(Set<? extends OWLClassExpression> operands) {
+		return factory.getOWLObjectIntersectionOf(operands)
+	}
+	
+	def getOWLObjectUnionOf(Set<? extends OWLClassExpression> operands) {
+		return factory.getOWLObjectUnionOf(operands)
+	}
 }

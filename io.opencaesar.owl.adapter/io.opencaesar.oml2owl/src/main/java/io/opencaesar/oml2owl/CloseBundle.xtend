@@ -1,20 +1,19 @@
 package io.opencaesar.oml2owl
 
 import io.opencaesar.oml.Aspect
+import io.opencaesar.oml.Entity
 import io.opencaesar.oml.Graph
 import io.opencaesar.oml.TermSpecializationAxiom
 import io.opencaesar.oml2owl.utils.Singleton
 import io.opencaesar.oml2owl.utils.Taxonomy
 import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
+import org.jgrapht.GraphTests
+import org.jgrapht.alg.connectivity.ConnectivityInspector
+import org.jgrapht.graph.AsUndirectedGraph
 import org.semanticweb.owlapi.model.OWLOntology
 
 import static extension io.opencaesar.oml.Oml.*
-import io.opencaesar.oml.Entity
-import org.jgrapht.alg.connectivity.ConnectivityInspector
-import org.jgrapht.GraphType
-import org.jgrapht.graph.AsUndirectedGraph
-import org.jgrapht.GraphTests
 
 class UnconnectedGraphException extends RuntimeException {	
 	new(String s) {
@@ -93,7 +92,7 @@ class CloseBundle {
 		}
 		
 		val siblingMap = tree.siblingMap
-		siblingMap.forEach[ k, v |
+		siblingMap.values.forEach[ v |
 			owlApi.addDisjointClassesAxiom(ontology, v)
 		]
 		
