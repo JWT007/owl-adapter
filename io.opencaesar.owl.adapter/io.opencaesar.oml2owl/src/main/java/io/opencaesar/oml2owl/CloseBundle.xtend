@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.semanticweb.owlapi.model.OWLOntology
 
 import static extension io.opencaesar.oml.Oml.*
+import io.opencaesar.oml.Entity
 
 class CloseBundle {
 	
@@ -28,15 +29,24 @@ class CloseBundle {
 		val Taxonomy taxonomy = new Taxonomy
 
 		allGraphs.forEach [ g |
+			g.eAllContents.filter(Entity).forEach [ Entity entity |
+				System.out.println("addVertex(" + entity.toString + ")")
+				taxonomy.addVertex(new Singleton(entity.iri))
+			]
+		]
+		
+		allGraphs.forEach [ g |
 			g.eAllContents.filter(TermSpecializationAxiom).forEach [ axiom |
 				val specialized = axiom.specializedTerm
 				val specializing = axiom.specializingTerm
 
-				if (!(specialized instanceof Aspect) && !(specializing instanceof Aspect)) {
+				if ((specialized instanceof Entity) &&
+					!(specialized instanceof Aspect) &&
+					(specializing instanceof Entity) &&
+					!(specializing instanceof Aspect)) {
 					val specializedSingleton = new Singleton(specialized.iri)
 					val specializingSingleton = new Singleton(specializing.iri)
-					taxonomy.addVertex(specializedSingleton)
-					taxonomy.addVertex(specializingSingleton)
+					System.out.println("addEdge(" + specializedSingleton.toString + ", " + specializingSingleton + ")")
 					taxonomy.addEdge(specializedSingleton, specializingSingleton)
 				}
 			]
