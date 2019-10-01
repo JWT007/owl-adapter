@@ -45,7 +45,12 @@ class CloseBundle {
 					!(specializing instanceof Aspect)) {
 					val specializedSingleton = new Singleton(specialized)
 					val specializingSingleton = new Singleton(specializing)
-					taxonomy.addEdge(specializedSingleton, specializingSingleton)
+					try {
+						taxonomy.addEdge(specializedSingleton, specializingSingleton)
+					} catch (IllegalArgumentException e) {
+						val msg = e.getMessage + ": while adding edge " + specialized.toString + " -> " + specializing.toString
+						throw new IllegalArgumentException(msg)
+					}
 				}
 			]
 		]
